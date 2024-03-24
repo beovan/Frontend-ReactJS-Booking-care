@@ -25,9 +25,31 @@ class Login extends Component {
     this.setState({ password: event.target.value });
   };
   handleLogin = async () => {
-    console.log("username" + this.state.username);
-    console.log("password" + this.state.password);
-    await handleLoginApi(this.state.username, this.state.password);
+    this.setState({
+      errMessage: "",
+    });
+    try {
+      let data =  await handleLoginApi(this.state.username, this.state.password);
+      if (data && data.errCode !== 0) {
+        this.setState({
+          errMessage: data.message,
+        });
+      }
+      if (data && data.errCode === 0) {
+       this.props.userLoginSuccess(data.user)
+
+        console.log("login success");
+      }
+    } catch (e) {
+      if (e.response) {
+        if (e.response.data) {
+          this.setState({
+            errMessage: e.response.data.message,
+          });
+        }
+      }
+      console.log("beovan", e.response);
+    }
   };
 
   handleShowhidePassword = () => {
@@ -80,6 +102,9 @@ class Login extends Component {
                 </span>
               </div>
             </div>
+            <div className="col-12" style={{ color: "red" }}>
+              {this.state.errMessage}
+            </div>
             <div className="col-12">
               <button
                 className="btn-login"
@@ -116,9 +141,8 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
   return {
     navigate: (path) => dispatch(push(path)),
-    adminLoginSuccess: (adminInfo) =>
-      dispatch(actions.adminLoginSuccess(adminInfo)),
-    adminLoginFail: () => dispatch(actions.adminLoginFail()),
+    // userLoginFail: () => dispatch(actions.adminLoginFail()),
+    userLoginSuccess: (userInfo) => dispatch(actions.userLoginSuccess(userInfo)),
   };
 };
 
