@@ -7,7 +7,7 @@ import * as actions from "../../store/actions";
 
 import "./Login.scss";
 import { FormattedMessage } from "react-intl";
-
+import { handleLoginApi } from "../../services/userService";
 class Login extends Component {
   constructor(props) {
     super(props);
@@ -24,9 +24,10 @@ class Login extends Component {
   handleOnchangePassword = (event) => {
     this.setState({ password: event.target.value });
   };
-  handleLogin = () => {
+  handleLogin = async () => {
     console.log("username" + this.state.username);
     console.log("password" + this.state.password);
+    await handleLoginApi(this.state.username, this.state.password);
   };
 
   handleShowhidePassword = () => {
