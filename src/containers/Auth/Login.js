@@ -12,9 +12,10 @@ class Login extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      username: "beovan",
-      password: "123456",
+      username: "",
+      password: "",
       isShowPassword: false,
+      errMessage: "",
     };
   }
 
@@ -29,14 +30,14 @@ class Login extends Component {
       errMessage: "",
     });
     try {
-      let data =  await handleLoginApi(this.state.username, this.state.password);
+      let data = await handleLoginApi(this.state.username, this.state.password);
       if (data && data.errCode !== 0) {
         this.setState({
           errMessage: data.message,
         });
       }
       if (data && data.errCode === 0) {
-       this.props.userLoginSuccess(data.user)
+        this.props.userLoginSuccess(data.user);
 
         console.log("login success");
       }
@@ -48,7 +49,6 @@ class Login extends Component {
           });
         }
       }
-      console.log("beovan", e.response);
     }
   };
 
@@ -142,7 +142,8 @@ const mapDispatchToProps = (dispatch) => {
   return {
     navigate: (path) => dispatch(push(path)),
     // userLoginFail: () => dispatch(actions.adminLoginFail()),
-    userLoginSuccess: (userInfo) => dispatch(actions.userLoginSuccess(userInfo)),
+    userLoginSuccess: (userInfo) =>
+      dispatch(actions.userLoginSuccess(userInfo)),
   };
 };
 
