@@ -43,26 +43,27 @@ class UserManage extends Component {
               <th>Add</th>
               <th>Actions</th>
             </tr>
-            <tr>
+         
               {arrUsers &&
                 arrUsers.map((item, index) => {
                   console.log("beovan check map", item, index);
                   return (
-                    <div className="divClass">
+                    <tr>
                       <td>{item.email}</td>
                       <td>{item.firstName}</td>
                       <td>{item.lastName}</td>
                       <td>{item.address}</td>
                       <td>
-                        <button className="btn-edit"><i className="fas fa-pencil-alt"></i></button>
-                        <button className="btn-delete"><i className="fas fa-trash"></i></button>
-
+                        <button className="btn-edit">
+                          <i className="fas fa-pencil-alt"></i>
+                        </button>
+                        <button className="btn-delete">
+                          <i className="fas fa-trash"></i>
+                        </button>
                       </td>
-
-                    </div>
+                    </tr>
                   );
                 })}
-            </tr>
           </table>
         </div>
       </div>
