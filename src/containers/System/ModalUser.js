@@ -12,6 +12,8 @@ import {
   Form,
   FormGroup,
 } from "reactstrap";
+import { emitter } from "../../utils/emitter";
+
 class ModalUser extends Component {
   constructor(props) {
     super(props);
@@ -22,10 +24,26 @@ class ModalUser extends Component {
       lastName: "",
       address: "",
     };
+
+    this.listenToEmitter();
+  }
+
+  listenToEmitter() {
+    emitter.on("EVENT_CLEAR_MODAL_DATA", () => {
+        //reset state
+        this.setState({
+          email: '',
+          password: '',
+          firstName: '',
+          lastName: '',
+          address: ''
+
+        })
+    });
   }
 
   componentDidMount() {
-    console.log('mounting modal');
+    console.log("mounting modal");
   }
 
   toggle = () => {
@@ -72,7 +90,7 @@ class ModalUser extends Component {
     let isValid = this.checkValidateInput();
     if (isValid === true) {
       //call api create modal
-      this.props.createNewUser(this.state,'fac');
+      this.props.createNewUser(this.state, "fac");
     }
   };
 

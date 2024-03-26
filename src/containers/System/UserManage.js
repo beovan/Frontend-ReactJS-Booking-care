@@ -8,7 +8,7 @@ import {
   deleteUserService,
 } from "../../services/userService";
 import ModalUser from "./ModalUser";
-
+import { emitter } from "../../utils/emitter";
 class UserManage extends Component {
   constructor(props) {
     super(props);
@@ -64,6 +64,8 @@ class UserManage extends Component {
         this.setState({
           isOpenModalUser: false,
         });
+
+        emitter.emit('EVENT_CLEAR_MODAL_DATA')
       }
     } catch (e) {
       console.log(e);
