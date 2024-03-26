@@ -24,7 +24,9 @@ class ModalUser extends Component {
     };
   }
 
-  componentDidMount() {}
+  componentDidMount() {
+    console.log('mounting modal');
+  }
 
   toggle = () => {
     this.props.toggleUserModal();
