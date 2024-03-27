@@ -6,15 +6,19 @@ import {
   getAllUsers,
   createNewUserService,
   deleteUserService,
+  editUserService,
 } from "../../services/userService";
 import ModalUser from "./ModalUser";
 import { emitter } from "../../utils/emitter";
+import ModalEditUser from "./ModalEditUser";
 class UserManage extends Component {
   constructor(props) {
     super(props);
     this.state = {
       arrUsers: [],
       isOpenModalUser: false,
+      isOpenModalEditUser: false,
+      userEdit: {},
     };
   }
 
@@ -53,6 +57,11 @@ class UserManage extends Component {
       isOpenModalUser: !this.state.isOpenModalUser,
     });
   };
+  toggleUserEditModal = () => {
+    this.setState({
+      isOpenModalEditUser: !this.state.isOpenModalEditUser,
+    });
+  };
 
   createNewUser = async (data) => {
     try {
@@ -65,7 +74,7 @@ class UserManage extends Component {
           isOpenModalUser: false,
         });
 
-        emitter.emit('EVENT_CLEAR_MODAL_DATA')
+        emitter.emit("EVENT_CLEAR_MODAL_DATA");
       }
     } catch (e) {
       console.log(e);
@@ -76,15 +85,40 @@ class UserManage extends Component {
     try {
       let res = await deleteUserService(user.id);
       if (res && res.errCode !== 0) {
-          await this.getAllUsersFromReact() ;
-      }
-      else{
+        await this.getAllUsersFromReact();
+      } else {
         alert(res.errMessage);
       }
     } catch (e) {
       console.log(e);
     }
   };
+
+  handleEditUser = (user) => {
+    console.log("check edit user", user);
+    this.setState({
+      isOpenModalEditUser: true,
+      userEdit: user,
+    });
+  };
+
+  doEditUser = async (user) => {
+    try{
+      let res = await editUserService(user);
+      if (res && res.errCode === 0) {
+        this.setState({
+          isOpenModalEditUser: false,
+        });
+        await this.getAllUsersFromReact();
+
+      }
+      else{
+        alert(res.errCode);
+      }
+    }catch(e){
+      console.log(e);
+    }
+  }
   render() {
     let arrUsers = this.state.arrUsers;
     console.log(arrUsers);
@@ -96,6 +130,14 @@ class UserManage extends Component {
           toggleUserModal={this.toggleUserModal}
           createNewUser={this.createNewUser}
         />
+        {this.state.isOpenModalEditUser && (
+          <ModalEditUser
+            isOpen={this.state.isOpenModalEditUser}
+            toggleUserModal={this.toggleUserEditModal}
+            currentUser={this.state.userEdit}
+            editUser = {this.doEditUser}
+          />
+        )}
         <div className="title text-center">Manage users with Beovan</div>
         <div classNaFme="mx-1">
           <button
@@ -124,7 +166,10 @@ class UserManage extends Component {
                     <td>{item.lastName}</td>
                     <td>{item.address}</td>
                     <td>
-                      <button className="btn-edit">
+                      <button
+                        onClick={() => this.handleEditUser(item)}
+                        className="btn-edit"
+                      >
                         <i className="fas fa-pencil-alt"></i>
                       </button>
                       <button
