@@ -1,14 +1,18 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import HomeHeader from './HomeHeader';
+import Specilty from './Section/Specilty';
+
+
 class HomePage extends Component {
 
     render() {
-   
 
         return (
             <div>
                 <HomeHeader/>
+                <Specilty/>
+                <div style={{height: '300px'}}></div>
             </div>
         );
     }
