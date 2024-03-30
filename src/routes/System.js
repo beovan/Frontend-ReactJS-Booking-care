@@ -4,9 +4,10 @@ import { Redirect, Route, Switch } from 'react-router-dom';
 import UserManage from '../containers/System/UserManage';
 import ProductManage from '../containers/System/ProductManage';
 import RegisterPackageGroupOrAcc from '../containers/System/RegisterPackageGroupOrAcc';
-
+import Header from '../containers/Header/Header';
 class System extends Component {
     render() {
+            {/* {this.props.isLoggedIn && <Header />} */}
         const { systemMenuPath } = this.props;
         return (
             <div className="system-container">
@@ -25,7 +26,9 @@ class System extends Component {
 
 const mapStateToProps = state => {
     return {
-        systemMenuPath: state.app.systemMenuPath
+        systemMenuPath: state.app.systemMenuPath,
+     isLoggedIn: state.user.isLoggedIn,
+
     };
 };
 
