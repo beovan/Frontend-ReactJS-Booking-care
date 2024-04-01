@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import { FormattedMessage } from "react-intl";
 import { connect } from "react-redux";
 import { getAllCodeService } from "../../../services/userService";
-
+import { LANGUAGES } from "../../../utils";
 class UserRedux extends Component {
   constructor(props) {
     super(props);
@@ -26,17 +26,18 @@ class UserRedux extends Component {
   }
 
   render() {
-    console.log("beovan check state:", this.state); 
+    let genders = this.state.genderArr;
+    let language = this.props.language;
     return (
       <div className="user-redux-container">
         <div className="title">Add User beo van</div>
         <div className="user-redux-body">
           <div className="container">
             <div className="row">
+              <div className="col-12">
+                <FormattedMessage id="manage-user.add" />
+              </div>
               <div className="col-3">
-                <div className="col-12">
-                  <FormattedMessage id="manage-user.add" />
-                </div>
                 <label>
                   {" "}
                   <FormattedMessage id="manage-user.email" />
@@ -82,8 +83,16 @@ class UserRedux extends Component {
                   <FormattedMessage id="manage-user.gender" />
                 </label>
                 <select className="form-control">
-                  <option selected>Chose...</option>
-                  <option>...</option>
+                  {genders && genders.length > 0 && 
+                  genders.map((item, index)=> {
+                    return (
+                      <option key={index}>
+                        {language === LANGUAGES.VI ? item.valueVI : item.valueEN}
+                      </option>
+                    );
+                  
+                  }) }
+                 
                 </select>
               </div>
               <div className="col-3">
@@ -100,7 +109,7 @@ class UserRedux extends Component {
                   <FormattedMessage id="manage-user.role" />
                 </label>
                 <select className="form-control">
-                  <option selected>Chose...</option>
+                  <option selected>Choose...</option>
                   <option>...</option>
                 </select>
               </div>
@@ -124,7 +133,9 @@ class UserRedux extends Component {
 }
 
 const mapStateToProps = (state) => {
-  return {};
+  return {
+    language: state.app.language,
+  };
 };
 
 const mapDispatchToProps = (dispatch) => {
