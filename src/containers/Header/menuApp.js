@@ -32,7 +32,7 @@ export const adminMenu = [
       },
 
     ],
-  }
+  },
   //quản lý chuyên khoa
   {
     name: "menu.admin.specialty",
@@ -43,7 +43,7 @@ export const adminMenu = [
       },
 
     ],
-  } 
+  } ,
   //quản lý cẩm nang
   {
     name: "menu.admin.handbook",
