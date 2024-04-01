@@ -25,7 +25,7 @@ class Header extends Component {
         <div className="languages">
           <span
             className={
-              language === LANGUAGES.VI ? "language-vi active" : "language-vi"
+              language === LANGUAGES.VI ? "languages-vi active" : "languages-vi"
             }
             onClick={() => this.handleChangeLanguage(LANGUAGES.VI)}
           >
@@ -33,18 +33,20 @@ class Header extends Component {
           </span>
           <span
             className={
-              language === LANGUAGES.EN ? "language-en active" : "language-en"
+              language === LANGUAGES.EN ? "languages-en active" : "languages-en"
             }
             onClick={() => this.handleChangeLanguage(LANGUAGES.EN)}
           >
             EN
           </span>
-        </div>
 
-        {/* nút logout */}
+          {/* nút logout */}
         <div className="btn btn-logout" onClick={processLogout}>
           <i className="fas fa-sign-out-alt"></i>
         </div>
+        </div>
+
+        
       </div>
     );
   }
