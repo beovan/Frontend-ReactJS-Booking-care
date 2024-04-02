@@ -139,7 +139,7 @@ class UserManage extends Component {
           />
         )}
         <div className="title text-center">Manage users with Beovan</div>
-        <div classNaFme="mx-1">
+        <div className="mx-1">
           <button
             className="btn btn-primary px-3"
             onClick={() => this.handleAddUser()}

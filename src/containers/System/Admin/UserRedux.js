@@ -6,6 +6,7 @@ import * as actions from "../../../store/actions";
 import "./UserRedux.scss";
 import LightBox from "react-image-lightbox";
 import "react-image-lightbox/style.css";
+import TableManageUser from "./TableManageUser";
 class UserRedux extends Component {
   constructor(props) {
     super(props);
@@ -59,6 +60,20 @@ class UserRedux extends Component {
       this.setState({
         positionArr: arrPositions,
         position: arrPositions && arrPositions.length > 0 ? arrPositions[0].key : "",
+      });
+    }
+    if(prevProps.listUsers !== this.props.listUsers){
+      this.setState({
+        email: "",
+        password: "",
+        firstName: "",
+        lastName: "",
+        phoneNumber: "",
+        address: "",
+        gender: "",
+        position: "",
+        role: "",
+        avatar: "",
       });
     }
   }
@@ -271,13 +286,13 @@ class UserRedux extends Component {
                   <FormattedMessage id="manage-user.role" />
                 </label>
                 <select className="form-control"
-                onChange={(event) => this.onChangeInput(event, "role")}
+                onChange={(event) => {this.onChangeInput(event, "role")}}
                 >
                   {roles &&
                     roles.length > 0 &&
                     roles.map((item, index) => {
                       return (
-                        <option key={index}>
+                        <option key={index} value={item.key}>
                           {language === LANGUAGES.VI
                             ? item.valueVI
                             : item.valueEN}
@@ -309,13 +324,16 @@ class UserRedux extends Component {
                   ></div>
                 </div>
               </div>
-              <div className="col-12 mt-3">
+              <div className="col-12 my-3">
                 <button
                   className="btn btn-primary"
                   onClick={() => this.handleSaveUser()}
                 >
                   <FormattedMessage id="manage-user.save" />
                 </button>
+              </div>
+              <div className="col-12 mb-5">
+                <TableManageUser />
               </div>
             </div>
           </div>
@@ -338,6 +356,7 @@ const mapStateToProps = (state) => {
     roleRedux: state.admin.roles,
     positionRedux: state.admin.position,
     isLoadingGender: state.admin.isLoadingGender,
+    listUsers: state.admin.users,
   };
 };
 
@@ -347,6 +366,7 @@ const mapDispatchToProps = (dispatch) => {
     getPositionStart: () => dispatch(actions.fetchPositionStart()),
     getRoleStart: () => dispatch(actions.fetchRoleStart()),
     createNewUser: (data) => dispatch(actions.createNewUser(data)),  
+    fetchUserRedux: () => dispatch(actions.fetchAllUsersStart()),
 
     // processLogout: () => dispatch(actions.processLogout()),
     // changeLanguageAppRedux: (language) =>
