@@ -54,22 +54,24 @@ class UserRedux extends Component {
       this.setState({
         previewImgURL: objectUrl,
       });
+      console.log(objectUrl)
     }
   };
 
   openPreviewImage = () => {
-    if (!this.state.previewImgURL) {
+    if (!this.state.previewImgURL) return;
+      console.log("openPreviewImage");
       this.setState({
         isOpen: true,
       });
-    }
+    
   };
   render() {
     let genders = this.state.genderArr;
     let roles = this.state.roleArr;
     let positions = this.state.positionArr;
     let language = this.props.language;
-    let isGetGender = this.props.isGetGender;
+    let isGetGender = this.props.isLoadingGender;
     return (
       <div className="user-redux-container">
         <div className="title">Add User beo van</div>
@@ -193,8 +195,8 @@ class UserRedux extends Component {
                   </label>
                   <div
                     className="preview-image"
-                    style={{ background: `url(${this.state.previewImgURL})` }}
-                    onChange={() => this.openPreviewImage()}
+                    style={{ backgroundImage: `url(${this.state.previewImgURL})` }}
+                    onClick={() => this.openPreviewImage()}
                   ></div>
                 </div>
               </div>
@@ -206,7 +208,7 @@ class UserRedux extends Component {
             </div>
           </div>
         </div>
-        {this.state.isOpen && (
+        {this.state.isOpen === true && (
           <LightBox
             mainSrc={this.state.previewImgURL}
             onCloseRequest={() => this.setState({ isOpen: false })}

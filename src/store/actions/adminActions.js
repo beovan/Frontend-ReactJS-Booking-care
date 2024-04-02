@@ -50,7 +50,7 @@ export const fetchRoleFailed = () => ({
     type: actionTypes.FETCH_POSITION_FAILDED,
 })
 
-export const fetchPostionStart = () => {
+export const fetchPositionStart = () => {
     return async (dispatch,getState) => {
         try{
             let res = await getAllCodeService("POSITION");
@@ -63,7 +63,7 @@ export const fetchPostionStart = () => {
         }
         catch (e){
             dispatch(fetchPositionFailed());
-            console.log("fetchPositionStart error: ", e);
+            console.log("fetchPositionFaild error: ", e);
         }
     }
 }
