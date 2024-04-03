@@ -86,7 +86,6 @@ class UserRedux extends Component {
         action: CRUD_ACTIONS.CREATE,
         previewImgURL: ""
       });
-      console.log("beovan check componentDidUpdate: ", this.state);
     }
   }
 
@@ -124,14 +123,14 @@ class UserRedux extends Component {
         firstName: this.state.firstName,
         lastName: this.state.lastName,
         address: this.state.address,
-        phoneNumber: this.state.phoneNumber,
+        phonenumber: this.state.phoneNumber,
         gender: this.state.gender,
         roleId: this.state.role,
         positionId: this.state.position,
         avatar: this.state.avatar,
       });
+      console.log("beovan check handle save user: ", this.state);
     }
-    console.log("beovan check handle save user: ", this.state);
     if (action === CRUD_ACTIONS.EDIT) {
       //fire redux edit user
       this.props.editAUserRedux({
@@ -141,14 +140,13 @@ class UserRedux extends Component {
         firstName: this.state.firstName,
         lastName: this.state.lastName,
         address: this.state.address,
-        phoneNumber: this.state.phoneNumber,
+        phonenumber: this.state.phoneNumber,
         gender: this.state.gender,
         roleId: this.state.role,
         positionId: this.state.position,
         avatar: this.state.avatar,
       });
     }
-    console.log("beovan check handle edit user: ", this.state);
   };
 
   checkValidateInput = () => {
@@ -200,6 +198,7 @@ class UserRedux extends Component {
       action: CRUD_ACTIONS.EDIT,
       userEditId: user.id,
     });
+    console.log("beovan check handle edit user from parent: ", this.state);
   };
 
   render() {
@@ -346,7 +345,7 @@ class UserRedux extends Component {
                     positions.length > 0 &&
                     positions.map((item, index) => {
                       return (
-                        <option key={index}>
+                        <option key={index} value={item.key}>
                           {language === LANGUAGES.VI
                             ? item.valueVI
                             : item.valueEN}
