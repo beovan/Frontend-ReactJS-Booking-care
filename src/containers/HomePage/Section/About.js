@@ -17,10 +17,10 @@ class About extends Component {
                 height="400px"
                 src="https://www.youtube.com/embed/2gYG5URBGYc"
                 title="DR OH | KHÁM BỆNH CHO TRẺ NGAY TẠI NHÀ VỚI ĐỘI NGŨ BÁC SĨ CHẤT LƯỢNG"
-                frameborder="0"
+                frameBorder="0"
                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                referrerpolicy="strict-origin-when-cross-origin"
-                allowfullscreen
+                referrerPolicy="strict-origin-when-cross-origin"
+                allowFullScreen
               ></iframe>
             </div>
             <div className="content-right">
