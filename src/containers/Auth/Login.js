@@ -8,6 +8,7 @@ import * as actions from "../../store/actions";
 import "./Login.scss";
 import { FormattedMessage } from "react-intl";
 import { handleLoginApi } from "../../services/userService";
+import { toast } from "react-toastify";
 class Login extends Component {
   constructor(props) {
     super(props);
@@ -41,6 +42,7 @@ class Login extends Component {
 
         console.log("login success");
       }
+      toast.success("Login success!");
     } catch (e) {
       if (e.response) {
         if (e.response.data) {
