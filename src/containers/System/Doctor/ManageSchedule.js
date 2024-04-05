@@ -9,6 +9,7 @@ import DatePicker from "../../../components/Input/DatePicker";
 import moment from "moment";
 import { toast } from "react-toastify";
 import _ from "lodash";
+import { saveBulkScheduleDoctor } from "../../../services/userService"
 
 class ManageSchedule extends Component {
     constructor(props){
@@ -88,7 +89,7 @@ class ManageSchedule extends Component {
                 })
         }
     }
-    handleSaveSchedule = () => {
+    handleSaveSchedule = async () => {
         let {rangeTime, selectedDocter, currentDate} = this.state;
         let result = [];
 
@@ -101,15 +102,17 @@ class ManageSchedule extends Component {
             return;
         }
 
-        let formatedDate = moment(currentDate).format(dateFormat.SEND_TO_SERVER);
+        // let formatedDate = moment(currentDate).format(dateFormat.SEND_TO_SERVER);
+        let formatedDate = new Date(currentDate).getTime();
+        
         if (rangeTime && rangeTime.length > 0) {
             let selectedTime = rangeTime.filter(item => item.isSelected === true);
             if (selectedTime && selectedTime.length > 0) {
-                selectedTime.map(item => {
+                selectedTime.map((schedule, index) => {
                     let object = {};
                     object.doctorId = selectedDocter.value;
                     object.date = formatedDate;
-                    object.timeType = item.keyMap;
+                    object.timeType = schedule.keyMap;
                     result.push(object);
                 })
             }
@@ -120,6 +123,14 @@ class ManageSchedule extends Component {
             }
 
         }
+        let res = await saveBulkScheduleDoctor({
+            arrSchedule: result,
+            doctorId: selectedDocter.value,
+            formatedDate: formatedDate
+        });
+        console.log("beovan check submit schedule: ", res);
+        console.log("beovan check submit schedule result: ",result);
+
     }
 
   render() {
