@@ -59,6 +59,12 @@ class Login extends Component {
       isShowPassword: !this.state.isShowPassword,
     });
   };
+
+  handleKeyDown = (event) => {
+    if (event.key === "Enter" || event.keyCode === 13) {
+      this.handleLogin();
+    }
+  }
   render() {
     // const { username, password, loginError } = this.state;
     // const { lang } = this.props;
@@ -88,6 +94,7 @@ class Login extends Component {
                   onChange={(event) => {
                     this.handleOnchangePassword(event);
                   }}
+                  onKeyDown={(event) => this.handleKeyDown(event)}
                 />
                 <span
                   onClick={() => {
