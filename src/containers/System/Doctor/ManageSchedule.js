@@ -4,9 +4,11 @@ import "./ManageSchedule.scss";
 import { FormattedMessage } from "react-intl";
 import Select from 'react-select';
 import * as actions from "../../../store/actions";
-import {CRUD_ACTIONS ,LANGUAGES } from "../../../utils";
-import DatePicker from "react-flatpickr";
+import {CRUD_ACTIONS ,LANGUAGES, dateFormat } from "../../../utils";
+import DatePicker from "../../../components/Input/DatePicker";
 import moment from "moment";
+import { toast } from "react-toastify";
+import _ from "lodash";
 
 class ManageSchedule extends Component {
     constructor(props){
@@ -31,8 +33,14 @@ class ManageSchedule extends Component {
             })
         }
         if (prevProps.allScheduleTime !== this.props.allScheduleTime){
+            let data= this.props.allScheduleTime;
+            if (data && data.length > 0) {
+                data = data.map(
+                    item => ({...item, isSelected: false})
+                )
+            }
             this.setState({
-                rangeTime: this.props.allScheduleTime
+                rangeTime: data
             })
         }
     }
@@ -67,6 +75,53 @@ class ManageSchedule extends Component {
         })
     }
 
+    handleClickBtnTime = (time) => {
+        let {rangeTime} = this.state;
+        if (rangeTime && rangeTime.length > 0) {
+            rangeTime = rangeTime.map(
+                item => {
+                    if (item.id === time.id)item.isSelected = !item.isSelected;
+                    return item;
+                })
+                this.setState({
+                    rangeTime: rangeTime
+                })
+        }
+    }
+    handleSaveSchedule = () => {
+        let {rangeTime, selectedDocter, currentDate} = this.state;
+        let result = [];
+
+        if(!currentDate) {
+            toast.error("Invaild data!");
+            return;
+        }
+        if (!selectedDocter || _.isEmpty(selectedDocter)) {
+            toast.error("Invaild selected doctor!");
+            return;
+        }
+
+        let formatedDate = moment(currentDate).format(dateFormat.SEND_TO_SERVER);
+        if (rangeTime && rangeTime.length > 0) {
+            let selectedTime = rangeTime.filter(item => item.isSelected === true);
+            if (selectedTime && selectedTime.length > 0) {
+                selectedTime.map(item => {
+                    let object = {};
+                    object.doctorId = selectedDocter.value;
+                    object.date = formatedDate;
+                    object.timeType = item.keyMap;
+                    result.push(object);
+                })
+            }
+            else {
+                toast.error("Invaild selected time!");
+                return;
+            
+            }
+
+        }
+    }
+
   render() {
 
         let { rangeTime } = this.state;
@@ -99,7 +154,11 @@ class ManageSchedule extends Component {
                         {rangeTime && rangeTime.length > 0 &&
                          rangeTime.map((item, index) => {
                             return(
-                                <button className="btn btn-schedule" key={index}>
+                                <button
+                                className={item.isSelected ===true ? "btn btn-schedule active" : "btn btn-schedule"} 
+                                key={index}
+                                onClick={() => this.handleClickBtnTime(item)}
+                                >
                                     {language === LANGUAGES.VI ? item.valueVI : item.valueEN}
                                 </button>
                             )
@@ -107,7 +166,9 @@ class ManageSchedule extends Component {
                         }
                     </div>
                     <div className="col-12">
-                        <button className="btn btn-primary btn-save-schedule">
+                        <button
+                        onClick={()=> this.handleSaveSchedule()}
+                        className="btn btn-primary btn-save-schedule">
                             <FormattedMessage id="manage-schedule.save"/>
                         </button>
                     </div>
