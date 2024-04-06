@@ -266,7 +266,7 @@ export const saveDetailDoctor = (data) => {
         });
       }
     } catch (e) {
-      toast.error("Save Infor detail doctor error!");
+      toast.error("Save Inforfdsfds detail doctor error!");
       console.log("SAVE_DETAIL_DOCTORS_FAILED: ", e);
       dispatch({
         type: actionTypes.SAVE_DETAIL_DOCTORS_FAILED,
