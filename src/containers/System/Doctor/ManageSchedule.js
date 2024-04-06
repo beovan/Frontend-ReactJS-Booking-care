@@ -131,8 +131,12 @@ class ManageSchedule extends Component {
         if (res && res.errCode === 0) {
             toast.success("Save schedule success!");
         }
-        console.log("beovan check submit schedule: ", res);
-        console.log("beovan check submit schedule result: ",result);
+        else {
+            toast.error("Save schedule failed!");
+            console.log("error saveBulkScheduleDoctor: ");
+            console.log("error saveBulkScheduleDoctor >>> res ", res);
+        }
+   
 
     }
 
@@ -140,6 +144,7 @@ class ManageSchedule extends Component {
 
         let { rangeTime } = this.state;
         let {language} = this.props;
+        let yesterday = new Date(new Date().setDate(new Date().getDate() - 1));
     return (
         <div className="manage-schedule-container">
             <div className="m-s-title">
@@ -161,7 +166,7 @@ class ManageSchedule extends Component {
                         onChange={this.handleOnChangeDatePicker}
                         className="form-control"
                         value={this.state.currentDate}
-                        minDate={new Date()}
+                        minDate={yesterday}
                         />
                     </div>
                     <div className="col-12 pick-hour-container">
