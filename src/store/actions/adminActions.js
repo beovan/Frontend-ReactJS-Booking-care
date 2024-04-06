@@ -307,7 +307,7 @@ export const getRequiredDoctorInfor = () => {
      let resPrice = await getAllCodeService("PRICE");
      let resPayment = await getAllCodeService("PAYMENT");
       let resProvince = await getAllCodeService("PROVINCE");
-
+  
       if (resPrice && resPrice.errCode === 0
       && resPayment && resPayment.errCode === 0
       && resProvince && resProvince.errCode ===0

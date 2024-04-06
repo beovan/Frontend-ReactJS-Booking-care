@@ -51,11 +51,11 @@ class MangeDoctor extends Component {
         let labelVi =
           type === "USERS"
             ? `${item.lastName} ${item.firstName}`
-            : item.valueVi;
+            : item.valueVI;
         let labelEn =
           type === "USERS"
             ? `${item.firstName} ${item.lastName}`
-            : item.valueEn;
+            : item.valueEN;
 
         object.label = language === LANGUAGES.VI ? labelVi : labelEn;
         object.value = item.id;
@@ -85,11 +85,9 @@ class MangeDoctor extends Component {
     ) {
       let { resPrice, resPayment, resProvince } =
         this.props.allRequiredDoctorInfor;
-
       let dataSelectPrice = this.bulildDataInputSelect(resPrice);
       let dataSelectPayment = this.bulildDataInputSelect(resPayment);
       let dataSelectProvince = this.bulildDataInputSelect(resProvince);
-
       this.setState({
         listPrice: dataSelectPrice,
         listPayment: dataSelectPayment,
@@ -173,7 +171,7 @@ class MangeDoctor extends Component {
             ></textarea>
           </div>
         </div>
-        <div className="more-infor-extra-row">
+        <div className="more-infor-extra row">
           <div className="col-4 form-group">
             <label>Chọn giá</label>
             <Select
