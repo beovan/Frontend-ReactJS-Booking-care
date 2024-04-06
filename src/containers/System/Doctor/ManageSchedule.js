@@ -128,6 +128,9 @@ class ManageSchedule extends Component {
             doctorId: selectedDocter.value,
             formatedDate: formatedDate
         });
+        if (res && res.errCode === 0) {
+            toast.success("Save schedule success!");
+        }
         console.log("beovan check submit schedule: ", res);
         console.log("beovan check submit schedule result: ",result);
 
