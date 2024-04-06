@@ -8,7 +8,7 @@ import MdEditor from "react-markdown-editor-lite";
 import "react-markdown-editor-lite/lib/index.css";
 import "./MangeDoctor.scss";
 import Select from "react-select";
-import {CRUD_ACTIONS ,LANGUAGES} from "../../../utils";
+import { CRUD_ACTIONS, LANGUAGES } from "../../../utils";
 import { getDetailDoctorById } from "../../../services/userService";
 
 const mdParser = new MarkdownIt(/* Markdown-it options */);
@@ -17,49 +17,84 @@ class MangeDoctor extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      //save to Markdown table
       contentMarkdown: "",
       contentHTML: "",
       selectedOption: "",
       description: "",
       listDoctors: [],
       hasOldData: false,
+
+      //save to docto_infor table
+      listPrice: [],
+      listPayment: [],
+      listProvince: [],
+      selectedPrice: "",
+      selectedPayment: "",
+      selectedProvince: "",
+      nameClinic: "",
+      addressClinic: "",
+      note: "",
     };
   }
   componentDidMount() {
     this.props.fetchAllDoctors();
+    this.props.getAllRequiredDoctorInfor();
   }
 
-  bulildDataInputSelect = (inputData) => {
-      let result = [];
-      let {language} = this.props;
-    if (inputData && inputData.length > 0){
+  bulildDataInputSelect = (inputData, type) => {
+    let result = [];
+    let { language } = this.props;
+    if (inputData && inputData.length > 0) {
       inputData.map((item, index) => {
         let object = {};
-        let labelVi = `${item.lastName} ${item.firstName}`;
-        let labelEn = `${item.firstName} ${item.lastName}`;
-       
+        let labelVi =
+          type === "USERS"
+            ? `${item.lastName} ${item.firstName}`
+            : item.valueVi;
+        let labelEn =
+          type === "USERS"
+            ? `${item.firstName} ${item.lastName}`
+            : item.valueEn;
+
         object.label = language === LANGUAGES.VI ? labelVi : labelEn;
         object.value = item.id;
         result.push(object);
-      })
-      
-    } 
+      });
+    }
     return result;
-  }
+  };
   componentDidUpdate(prevProps, prevState, snapshot) {
     if (prevProps.allDoctors !== this.props.allDoctors) {
-      let dataSelect = this.bulildDataInputSelect(this.props.allDoctors)
+      let dataSelect = this.bulildDataInputSelect(
+        this.props.allDoctors,
+        "USERS"
+      );
       this.setState({
         listDoctors: dataSelect,
-      })
-
+      });
     }
     if (prevProps.language !== this.props.language) {
-      let dataSelect = this.bulildDataInputSelect(this.props.allDoctors)
+      let dataSelect = this.bulildDataInputSelect(this.props.allDoctors);
       this.setState({
         listDoctors: dataSelect,
-      })
-      
+      });
+    }
+    if (
+      prevProps.allRequiredDoctorInfor !== this.props.allRequiredDoctorInfor
+    ) {
+      let { resPrice, resPayment, resProvince } =
+        this.props.allRequiredDoctorInfor;
+
+      let dataSelectPrice = this.bulildDataInputSelect(resPrice);
+      let dataSelectPayment = this.bulildDataInputSelect(resPayment);
+      let dataSelectProvince = this.bulildDataInputSelect(resProvince);
+
+      this.setState({
+        listPrice: dataSelectPrice,
+        listPayment: dataSelectPayment,
+        listProvince: dataSelectProvince,
+      });
     }
   }
 
@@ -71,14 +106,14 @@ class MangeDoctor extends Component {
   };
 
   handleSaveContentMarkdown = () => {
-    let {hasOldData} = this.state;
+    let { hasOldData } = this.state;
     this.props.saveDetailDoctor({
-        contentHTML: this.state.contentHTML,
-        contentMarkdown: this.state.contentMarkdown,
-        description: this.state.description,
-        doctorId: this.state.selectedOption.value,
-        action: hasOldData === true ? CRUD_ACTIONS.EDIT : CRUD_ACTIONS.CREATE,
-    })
+      contentHTML: this.state.contentHTML,
+      contentMarkdown: this.state.contentMarkdown,
+      description: this.state.description,
+      doctorId: this.state.selectedOption.value,
+      action: hasOldData === true ? CRUD_ACTIONS.EDIT : CRUD_ACTIONS.CREATE,
+    });
   };
 
   handleChangeSelect = async (selectedOption) => {
@@ -91,15 +126,14 @@ class MangeDoctor extends Component {
         contentMarkdown: markdown.contentMarkdown,
         description: markdown.description,
         hasOldData: true,
-      })
-    }
-    else{
+      });
+    } else {
       this.setState({
         contentHTML: "",
         contentMarkdown: "",
         description: "",
         hasOldData: false,
-      })
+      });
     }
     console.log(`beovan check:`, res);
   };
@@ -109,29 +143,75 @@ class MangeDoctor extends Component {
     });
   };
   render() {
-    let {hasOldData} = this.state;
+    let { hasOldData } = this.state;
     return (
       <div className="manage-doctor-container">
-        <div className="manage-doctor-title">Tạo thêm thông tin doctors</div>
+        <div className="manage-doctor-title">
+          <FormattedMessage id="admin.manage-doctor.title" />
+        </div>
         <div className="more-infor">
           <div className="content-left form-group">
-            <label>Chọn bác sĩ</label>
+            <label>
+              <FormattedMessage id="admin.manage-doctor.select-doctor" />
+            </label>
             <Select
               value={this.state.selectedOption}
               onChange={this.handleChangeSelect}
               options={this.state.listDoctors}
+              placeholder={"Chọn bác sĩ"}
             />
           </div>
           <div className="content-right">
-            <label>Thông tin giới thiệu: </label>
+            <label>
+              <FormattedMessage id="admin.manage-doctor.intro" />
+            </label>
             <textarea
               className="form-control"
               rows="4"
               onChange={(event) => this.handleOnChangeDesc(event)}
               value={this.state.description}
-            >
-              gfdsgfds
-            </textarea>
+            ></textarea>
+          </div>
+        </div>
+        <div className="more-infor-extra-row">
+          <div className="col-4 form-group">
+            <label>Chọn giá</label>
+            <Select
+              // value={this.state.selectedPrice}
+              // onChange={this.handleChangeSelect}
+              options={this.state.listPrice}
+              placeholder={"Chọn giá"}
+            />
+          </div>
+          <div className="col-4 form-group">
+            <label>Chọn phương thức thanh toán</label>
+            <Select
+              // value={this.state.selectedPayment}
+              // onChange={this.handleChangeSelect}
+              options={this.state.listPayment}
+              placeholder={"Chọn phương thức thanh toán"}
+            />
+          </div>
+          <div className="col-4 form-group">
+            <label>Chọn tỉnh thành</label>
+            <Select
+              // value={this.state.selectedPayment}
+              // onChange={this.handleChangeSelect}
+              options={this.state.listProvince}
+              placeholder={"Chọn tỉnh thành"}
+            />
+          </div>
+          <div className="col-4 form-group">
+            <label>Tên phòng khám</label>
+            <input className="form-control" />
+          </div>
+          <div className="col-4 form-group">
+            <label>Địa chỉ phòng khám</label>
+            <input className="form-control" />
+          </div>
+          <div className="col-4 form-group">
+            <label>Note</label>
+            <input className="form-control" />
           </div>
         </div>
         <div className="manage-doctor-editor">
@@ -144,10 +224,21 @@ class MangeDoctor extends Component {
         </div>
         <button
           onClick={() => this.handleSaveContentMarkdown()}
-          className={hasOldData ===true ?"save-content-doctor" : "create-content-doctor" }>
-          {hasOldData === true ?
-          <span>Lưu thông tin</span> : <span>Tạo thông tin</span>
-        }        
+          className={
+            hasOldData === true
+              ? "save-content-doctor"
+              : "create-content-doctor"
+          }
+        >
+          {hasOldData === true ? (
+            <span>
+              <FormattedMessage id="admin.manage-doctor.save" />
+            </span>
+          ) : (
+            <span>
+              <FormattedMessage id="admin.manage-doctor.add" />
+            </span>
+          )}
         </button>
       </div>
     );
@@ -158,11 +249,13 @@ const mapStateToProps = (state) => {
   return {
     language: state.app.language,
     allDoctors: state.admin.allDoctors,
+    allRequiredDoctorInfor: state.admin.allRequiredDoctorInfor,
   };
 };
 const mapDispatchToProps = (dispatch) => {
   return {
     fetchAllDoctors: () => dispatch(actions.fetchAllDoctors()),
+    getAllRequiredDoctorInfor: () => dispatch(actions.getRequiredDoctorInfor()),
     saveDetailDoctor: (data) => dispatch(actions.saveDetailDoctor(data)),
   };
 };
