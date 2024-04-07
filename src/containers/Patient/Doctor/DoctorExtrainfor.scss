@@ -1,4 +1,4 @@
-.docotr-extra-infor-container {
+.doctor-extra-infor-container {
     padding-left: 15px;
 
     .content-up {
@@ -23,10 +23,15 @@
 
     .content-down {
         .short-infor {
-            span {
+            .detail {
                 cursor: pointer;
                 color : rgb(38, 160, 231);
             }
+
+            .currency {
+                margin: 0 5px;
+            }
+
         }
 
         .title-price {
