@@ -5,6 +5,7 @@ import UserManage from "../containers/System/UserManage";
 import Header from "../containers/Header/Header";
 import UserRedux from "../containers/System/Admin/UserRedux";
 import ManageDoctor from "../containers/System/Admin/MangeDoctor";
+import ManageSpecialty from "../containers/System/Specialty/ManageSpecialty";
 class System extends Component {
   render() {
     const { systemMenuPath, isLoggedIn } = this.props;
@@ -12,13 +13,14 @@ class System extends Component {
       <React.Fragment>
         {isLoggedIn && <Header />}
         <div className="system-container">
-          <div className="system-list">
+          <div className="system-list"> 
             <Switch>
               <Route path="/system/user-manage" component={UserManage} />
               <Route path="/system/user-redux" component={UserRedux} />
               <Route
              path="/system/manage-doctor" component={ManageDoctor}
               />
+              <Route path="/system/manage-specialty" component={ManageSpecialty}/>
               <Route
                 component={() => {
                   return <Redirect to={systemMenuPath} />;
