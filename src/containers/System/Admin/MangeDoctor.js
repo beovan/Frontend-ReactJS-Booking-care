@@ -144,6 +144,7 @@ class MangeDoctor extends Component {
       addressClinic: this.state.addressClinic,
       note: this.state.note,
     });
+    console.log(this.state);
   };
 
   handleChangeSelect = async (selectedOption) => {

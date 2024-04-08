@@ -138,6 +138,7 @@ class BookingModal extends Component {
       timeString: timeString,
       doctorName: doctorName,
     })
+    console.log("res: ", res);
     if (res && res.errCode === 0) {
       toast.success("Booking a new appointment succeed!");
       this.props.closeBookingClose();
