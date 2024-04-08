@@ -178,7 +178,7 @@ class ManageSchedule extends Component {
                                 key={index}
                                 onClick={() => this.handleClickBtnTime(item)}
                                 >
-                                    {language === LANGUAGES.VI ? item.valueVI : item.valueEN}
+                                    {language === LANGUAGES.VI ? item.valueVi : item.valueEn}
                                 </button>
                             )
                          })

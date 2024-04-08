@@ -325,8 +325,8 @@ class UserRedux extends Component {
                       return (
                         <option key={index} value={item.keyMap}>
                           {language === LANGUAGES.VI
-                            ? item.valueVI
-                            : item.valueEN}
+                            ? item.valueVi
+                            : item.valueEn}
                         </option>
                       );
                     })}
@@ -347,8 +347,8 @@ class UserRedux extends Component {
                       return (
                         <option key={index} value={item.keyMap}>
                           {language === LANGUAGES.VI
-                            ? item.valueVI
-                            : item.valueEN}
+                            ? item.valueVi
+                            : item.valueEn}
                         </option>
                       );
                     })}
@@ -371,8 +371,8 @@ class UserRedux extends Component {
                       return (
                         <option key={index} value={item.keyMap}>
                           {language === LANGUAGES.VI
-                            ? item.valueVI
-                            : item.valueEN}
+                            ? item.valueVi
+                            : item.valueEn}
                         </option>
                       );
                     })}

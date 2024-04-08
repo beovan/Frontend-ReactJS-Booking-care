@@ -59,8 +59,8 @@ class MangeDoctor extends Component {
       if (type === "PRICE") {
         inputData.map((item, index) => {
           let object = {};
-          let labelVi = `${item.valueVI}`;
-          let labelEn = `${item.valueEN} USD`;
+          let labelVi = `${item.valueVi}`;
+          let labelEn = `${item.valueEn} USD`;
           object.label = language === LANGUAGES.VI ? labelVi : labelEn;
           object.value = item.keyMap;
           result.push(object);
@@ -69,8 +69,8 @@ class MangeDoctor extends Component {
       if (type === "PAYMENT" ||  type === "PROVINCE") {
         inputData.map((item, index) => {
           let object = {};
-          let labelVi = `${item.valueVI}`;
-          let labelEn = `${item.valueEN}`;
+          let labelVi = `${item.valueVi}`;
+          let labelEn = `${item.valueEn}`;
           object.label = language === LANGUAGES.VI ? labelVi : labelEn;
           object.value = item.keyMap;
           result.push(object);
