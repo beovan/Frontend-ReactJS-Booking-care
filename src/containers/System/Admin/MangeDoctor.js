@@ -376,14 +376,14 @@ class MangeDoctor extends Component {
         <div className="row">
           <div className="col-4 form-group">
             <label>
-              <FormattedMessage id="admin.manage-doctor.specialty" />
+              <FormattedMessage id="admin.manage-doctor.speciality" />
             </label>
             <Select
               value={this.state.selectedSpecialty}
               options={this.state.listSpecialty}
               onChange={this.handleChangeSelectDoctorInfor}
               placeholder={
-                <FormattedMessage id="admin.manage-doctor.specialty" />
+                <FormattedMessage id="admin.manage-doctor.speciality" />
               }
               name="selectedSpecialty"
             />
@@ -395,7 +395,7 @@ class MangeDoctor extends Component {
             <Select
               value={this.state.selectedClinic}
               options={this.state.listClinic}
-              placeholder={<FormattedMessage id="admin.manage-doctor.clinic" />}
+              placeholder={<FormattedMessage id="admin.manage-doctor.select-clinic" />}
               onChange={this.handleChangeSelectDoctorInfor}
               name="selectedClinic"
             />
