@@ -103,7 +103,7 @@ const adminReducer = (state = initialState, action) => {
             ...state,
           };
         case actionTypes.FETCH_REQUIRED_DOCTOR_INFOR_FAILDED:
-          state.allScheduleTime = [];
+          state.allRequiredDoctorInfor = [];
           return {
             ...state,
           };
