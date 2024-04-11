@@ -7,7 +7,7 @@ import DoctorSchedule from "../Doctor/DoctorSchedule";
 import DoctorExtraInfor from "../Doctor/DoctorExtrainfor";
 import ProfileDoctor from "../Doctor/ProfileDoctor";
 import {getAllDetailSpecialtyById , getAllCodeService} from "../../../services/userService";
-import _ from "lodash";
+import _, { create } from "lodash";
 import { LANGUAGES } from "../../../utils";
 class DetailSpecialty extends Component {
   constructor(props) {
@@ -37,11 +37,22 @@ class DetailSpecialty extends Component {
             })
           }
          }
+
+         let dataProvice = resProvince.data;
+         if (dataProvice && dataProvice.length > 0) {
+          dataProvice.unshift({
+            createAt: null,
+            keyMap: "ALL",
+            type: "PROVINCE",
+            valueEn: "All",
+            valueVi: "Toàn quốc",
+          })
+         }
         
         this.setState({
           dataDetailSpecialty: res.data,
           arrDoctorId: arrDoctorId,
-          listProvince: resProvince.data,
+          listProvince: dataProvice ? dataProvice : [],
         });
         
       }
@@ -53,8 +64,35 @@ class DetailSpecialty extends Component {
     }
   }
 
-  handleOnchangeSelect = (event) => {
-    console.log('beovan event', event.target.value)
+  handleOnchangeSelect = async (event) => {
+    if (this.props.match && this.props.match.params && this.props.match.params) {
+      let id = this.props.match.params.id;
+      let location = event.target.value;
+
+      let res = await getAllDetailSpecialtyById({
+         id: id, 
+        location: location
+       });
+
+       if (res && res.errCode === 0 ) {
+          let data = res.data;
+          let arrDoctorId =[];
+          if (data && !_.isEmpty(res.data)) {
+            let arr = data.doctorSpecialty;
+            if (arr && arr.length > 0) {
+              arr.map((item) => {
+                arrDoctorId.push(item.doctorId);
+              })
+            }
+          }
+
+          this.setState({
+            dataDetailSpecialty: res.data,
+            arrDoctorId: arrDoctorId
+           })
+       }
+     
+    }
   }
 
   render() {
@@ -97,6 +135,8 @@ class DetailSpecialty extends Component {
                       <ProfileDoctor
                         doctorId={item}
                         isShowDescriptionDoctor={true}
+                        isShowLinkDetail={true}
+                        isShowPrice={false}
                         // dataTime ={dataTime}
                       />
                     </div>
