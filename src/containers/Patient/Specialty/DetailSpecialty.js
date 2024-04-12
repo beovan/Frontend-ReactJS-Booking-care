@@ -38,13 +38,13 @@ class DetailSpecialty extends Component {
           }
          }
 
-         let dataProvice = resProvince.data;
-         if (dataProvice && dataProvice.length > 0) {
-          dataProvice.unshift({
+         let dataProvince = resProvince.data;
+         if (dataProvince && dataProvince.length > 0) {
+          dataProvince.unshift({
             createAt: null,
             keyMap: "ALL",
             type: "PROVINCE",
-            valueEn: "All",
+            valueEn: "ALL",
             valueVi: "Toàn quốc",
           })
          }
@@ -52,7 +52,7 @@ class DetailSpecialty extends Component {
         this.setState({
           dataDetailSpecialty: res.data,
           arrDoctorId: arrDoctorId,
-          listProvince: dataProvice ? dataProvice : [],
+          listProvince: dataProvince ? dataProvince : [],
         });
         
       }
@@ -117,7 +117,7 @@ class DetailSpecialty extends Component {
               {listProvince && listProvince.length > 0 &&
                 listProvince.map((item , index) => {
                     return (
-                      <option key={index} value={item.KeyMap}>
+                      <option key={index} value={item.keyMap}>
                         {language === LANGUAGES.VI ? item.valueVi : item.valueEn}
                       </option>
                     )
