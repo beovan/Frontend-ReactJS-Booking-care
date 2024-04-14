@@ -92,6 +92,15 @@ class MangeDoctor extends Component {
           result.push(object);
         });
       }
+
+      if (type === "CLINIC") {
+        inputData.map((item, index) => {
+          let object = {};
+          object.label = item.name;
+          object.value = item.id;
+          result.push(object);
+        })
+      }
     }
     return result;
   };
@@ -109,7 +118,7 @@ class MangeDoctor extends Component {
     if (
       prevProps.allRequiredDoctorInfor !== this.props.allRequiredDoctorInfor
     ) {
-      let { resPrice, resPayment, resProvince, resSpecialty } =
+      let { resPrice, resPayment, resProvince, resSpecialty , resClinic } =
         this.props.allRequiredDoctorInfor;
       let dataSelectPrice = this.buildDataInputSelect(resPrice, "PRICE");
       let dataSelectPayment = this.buildDataInputSelect(resPayment, "PAYMENT");
@@ -121,12 +130,14 @@ class MangeDoctor extends Component {
         resSpecialty,
         "SPECIALTY"
       );
+      let dataSelectClinic = this.buildDataInputSelect(resClinic, "CLINIC");
 
       this.setState({
         listPrice: dataSelectPrice,
         listPayment: dataSelectPayment,
         listProvince: dataSelectProvince,
         listSpecialty: dataSelectSpecialty,
+        listClinic: dataSelectClinic,
       });
     }
 
@@ -175,7 +186,7 @@ class MangeDoctor extends Component {
       nameClinic: this.state.nameClinic,
       addressClinic: this.state.addressClinic,
       note: this.state.note,
-      clicnicId: this.state.selectedClinic && this.state.selectedClinic.value ? this.state.selectedClinic.value : '',
+      clinicId: this.state.selectedClinic && this.state.selectedClinic.value ? this.state.selectedClinic.value : '',
       specialtyId: this.state.selectedSpecialty.value,
     });
     console.log(this.state);
@@ -183,7 +194,7 @@ class MangeDoctor extends Component {
 
   handleChangeSelect = async (selectedOption) => {
     this.setState({ selectedOption });
-    let { listPayment, listPrice, listProvince  } = this.state;
+    let { listPayment, listPrice, listProvince, listSpecialty , listClinic  } = this.state;
 
     let res = await getDetailDoctorById(selectedOption.value);
     if (res && res.errCode === 0 && res.data && res.data.Markdown) {
@@ -195,9 +206,13 @@ class MangeDoctor extends Component {
         paymentId = "",
         priceId = "",
         provinceId = "",
+        specialtyId = '',
+        clinicId = '',
         selectedPayment = "",
         selectedPrice = "",
-        selectedProvince = ""
+        selectedProvince = "",
+        selectedClinic = "",
+        selectedSpecialty = ""
         ;
       if (res.data.Doctor_Infor) {
         addressClinic = res.data.Doctor_Infor.addressClinic;
@@ -206,7 +221,8 @@ class MangeDoctor extends Component {
         paymentId = res.data.Doctor_Infor.paymentId;
         priceId = res.data.Doctor_Infor.priceId;
         provinceId = res.data.Doctor_Infor.provinceId;
-
+        specialtyId = res.data.Doctor_Infor.specialtyId;
+        clinicId = res.data.Doctor_Infor.clinicId;
         selectedPayment = listPayment.find((item) => {
           return item && item.value === paymentId;
         });
@@ -216,7 +232,12 @@ class MangeDoctor extends Component {
         selectedProvince = listProvince.find((item) => {
           return item && item.value === provinceId;
         });
-  
+        selectedSpecialty = listSpecialty.find((item) => {
+          return item && item.value === specialtyId;
+        });
+        selectedClinic = listClinic.find((item) => {
+          return item && item.value === clinicId;
+        });
       }
       this.setState({
         contentHTML: markdown.contentHTML,
@@ -229,6 +250,8 @@ class MangeDoctor extends Component {
         selectedPayment: selectedPayment,
         selectedPrice: selectedPrice,
         selectedProvince: selectedProvince,
+        selectedSpecialty: selectedSpecialty,
+        selectedClinic: selectedClinic,
       });
     } else {
       this.setState({
@@ -243,6 +266,8 @@ class MangeDoctor extends Component {
         selectedPrice: "",
         selectedProvince: "",
         selectedSpecialty: "",
+        selectedSpecialty: "",
+        selectedClinic: "",
       });
     }
   };
