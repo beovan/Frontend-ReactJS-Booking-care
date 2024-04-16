@@ -218,7 +218,6 @@ export const fetchTopDoctor = () => {
           dataDoctors: res.data,
         });
       }
-      console.log("fetchTopDoctor res: ", res);
     } catch (e) {
       console.log("FETCH_TOP_DOCTORS_FAILED: ", e);
       dispatch({

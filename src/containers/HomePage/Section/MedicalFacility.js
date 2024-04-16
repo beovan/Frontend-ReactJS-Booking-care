@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import './MedicalFacility.scss'
 import Slider from 'react-slick';
 import { getAllClinic } from '../../../services/userService';
-import {withRouter} from 'react-router';
+import { withRouter } from 'react-router';
 
 class MedicalFacility extends Component {
   constructor(props){
@@ -19,7 +19,6 @@ class MedicalFacility extends Component {
       this.setState({
         dataClinics: res.data ? res.data : []
       })
-      
     }
   }
   handleViewDetailClinic = (clinic) => {
@@ -29,6 +28,7 @@ class MedicalFacility extends Component {
   }
     render() {
       let {dataClinics} = this.state;
+      console.log('dataClinics', dataClinics);
         return (
             <div className="section-share section-medical-facility">
             <div className="section-container">
