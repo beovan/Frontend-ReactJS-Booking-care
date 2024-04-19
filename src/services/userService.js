@@ -86,6 +86,10 @@ const createNewClinic = (data) => {
   return axios.post("/api/create-new-clinic", data);
 };
 
+let getAllPatientForDoctor = (data) => {
+  return axios.get(`/api/get-list-patient-for-doctor?doctorId=${data.doctorId}&date=${data.date}`);
+}
+
 export {
   handleLoginApi,
   getAllUsers,
@@ -108,5 +112,6 @@ export {
   getAllDetailSpecialtyById,
   createNewClinic,
   getAllClinic,
-  getAllDetailClinicById
+  getAllDetailClinicById,
+  getAllPatientForDoctor
 };
