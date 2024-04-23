@@ -6,7 +6,7 @@ import { getDetailDoctorById } from "../../../services/userService";
 import { LANGUAGES } from "../../../utils";
 import DoctorSchedule from "./DoctorSchedule";
 import DoctorExtrainfor from "./DoctorExtrainfor";
-
+import LikeAndShare from "../SocialPlugin/LikeAndShare";
 class DetailDoctor extends Component {
   constructor(props) {
     super(props);
@@ -72,6 +72,11 @@ class DetailDoctor extends Component {
                   detailDoctor.Markdown.description && (
                     <span>{detailDoctor.Markdown.description}</span>
                   )}
+                  <div className="like-share-plugin">
+                    <LikeAndShare
+                    
+                    />
+                  </div>
               </div>
             </div>
           </div>

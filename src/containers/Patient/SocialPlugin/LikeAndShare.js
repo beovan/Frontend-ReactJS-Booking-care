@@ -1,15 +1,15 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
 import { FormattedMessage } from "react-intl";
+import {LANGUAGES} from '../../../utils';
 
-class DefaultClass extends Component {
+class LikeAndShare extends Component {
     constructor(props){
         super(props);
         this.state = {
-            data: []
+            
         }
     }
- 
 
     async componentDidMount() {
     }
@@ -23,10 +23,12 @@ class DefaultClass extends Component {
     render() {
         return (
             <div>
+                <div class="fb-like" data-href="https://developers.facebook.com/docs/plugins/" data-width="100" data-layout="" data-action="" data-size="" data-share="true"></div>
             </div>
         );
     }   
 }
+
 const mapStateToProps = state => {
     return {
         language: state.app.language
@@ -39,4 +41,4 @@ const mapDispatchToProps = dispatch => {
     };
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(DefaultClass);
+export default connect(mapStateToProps, mapDispatchToProps)(LikeAndShare);
