@@ -269,7 +269,6 @@ class MangeDoctor extends Component {
         selectedPrice: "",
         selectedProvince: "",
         selectedSpecialty: "",
-        selectedSpecialty: "",
         selectedClinic: "",
       });
     }

@@ -6,7 +6,19 @@ import { FormattedMessage } from "react-intl";
 import { LANGUAGES } from "../../utils";
 import { withRouter } from "react-router";
 import { changeLanguageApp } from "../../store/actions";
+import * as actions from "../../store/actions";
+import Select from "react-select";
+
 class HomeHeader extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      listDoctors: [],
+      selectedOption: "",
+      listAll: [],
+    };
+  }
+
   changeLanguage = (language) => {
     this.props.changeLanguageAppRedux(language);
   };
@@ -15,18 +27,63 @@ class HomeHeader extends Component {
     if (this.props.history) {
       this.props.history.push("/home");
     }
+  };
+  componentDidMount() {
+    this.props.fetchAllDoctors();
+    console.log("fdsfds", this.props.fetchAllDoctors());
   }
+  componentDidUpdate(prevProps, prevState, snapshot) {
+    if (prevProps.allDoctors !== this.props.allDoctors) {
+      let dataSelect = this.buildDataInputSelect(
+        this.props.allDoctors,
+        "USERS"
+      );
+      this.setState({
+        listDoctors: dataSelect,
+      });
+    }
+  }
+  buildDataInputSelect = (inputData, type) => {
+    let result = [];
+    let { language } = this.props;
+    if (inputData && inputData.length > 0) {
+      if (type === "USERS") {
+        inputData.map((item, index) => {
+          let object = {};
+          let labelVi = `${item.lastName} ${item.firstName}`;
+          let labelEn = `${item.firstName} ${item.lastName}`;
+          object.label = language === LANGUAGES.VI ? labelVi : labelEn;
+          object.value = item.id;
+          result.push(object);
+        });
+      }
+    }
+    return result;
+  };
+
+  handleChangeSelect = (selectedOption) => {
+    this.setState({ selectedOption });
+  
+    // Navigate to the detail page of the selected doctor
+    this.props.history.push(`/detail-doctor/${selectedOption.value}`);
+  };
 
   render() {
     let language = this.props.language;
-    console.log("Check userinfo: ", this.props.userInfo);
+    let { listDoctors } = this.state;
+    console.log("check statefdsaf", this.state);
     return (
       <React.Fragment>
         <div className="home-header-container">
           <div className="home-header-content">
             <div className="left-content">
               <i className="fas fa-bars"></i>
-              <img className="header-logo" src={logo} alt="" onClick={() => this.returnToHome()} />
+              <img
+                className="header-logo"
+                src={logo}
+                alt=""
+                onClick={() => this.returnToHome()}
+              />
             </div>
             <div className="center-content">
               <div className="child-content">
@@ -112,7 +169,21 @@ class HomeHeader extends Component {
               </div>
               <div className="search">
                 <i className="fas fa-search"></i>
-                <input type="text" placeholder="Tìm chuyên khoa khám bệnh" />
+                {/* <input
+                  type="text"
+                  className="search-input"
+                  placeholder="Tìm chuyên khoa khám bệnh"
+                /> */}
+                <Select
+                  className="search-input select-doctor"
+                  value={this.state.selectedOption}
+                  onChange={this.handleChangeSelect}
+                  options={this.state.listDoctors}
+                
+                  placeholder={
+                    <FormattedMessage id="admin.manage-doctor.select-doctor" />
+                  }
+                />
               </div>
             </div>
             <div className="content-down">
@@ -179,13 +250,17 @@ const mapStateToProps = (state) => {
     isLoggedIn: state.user.isLoggedIn,
     userInfo: state.user.userInfo,
     language: state.app.language,
+    allDoctors: state.admin.allDoctors,
   };
 };
 
 const mapDispatchToProps = (dispatch) => {
   return {
+    fetchAllDoctors: () => dispatch(actions.fetchAllDoctors()),
     changeLanguageAppRedux: (language) => dispatch(changeLanguageApp(language)),
   };
 };
 
-export default withRouter(connect(mapStateToProps, mapDispatchToProps)(HomeHeader))
+export default withRouter(
+  connect(mapStateToProps, mapDispatchToProps)(HomeHeader)
+);

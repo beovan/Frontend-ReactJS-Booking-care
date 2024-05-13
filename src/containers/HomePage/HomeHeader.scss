@@ -142,14 +142,22 @@
             i {
                 margin: 0 5px;
             }
-
-            input {
+            .select-doctor{
                 height    : 30px;
                 width     : 360px;
                 background: transparent;
                 border    : none;
                 outline   : none;
+                opacity: 0.8;
             }
+            // input {
+            //     height    : 30px;
+            //     width     : 360px;
+            //     background: transparent;
+            //     border    : none;
+            //     outline   : none;
+            // }
+           
         }
     }
 
