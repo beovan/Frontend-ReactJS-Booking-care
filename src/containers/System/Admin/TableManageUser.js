@@ -4,25 +4,17 @@ import { connect } from "react-redux";
 import "./TableManageUser.scss";
 import * as actions from "../../../store/actions";
 import MarkdownIt from 'markdown-it';
-import MdEditor from 'react-markdown-editor-lite';
 // import style manually
 import 'react-markdown-editor-lite/lib/index.css';
+import ReactPaginate from 'react-paginate';
 
-// Register plugins if required
-// MdEditor.use(YOUR_PLUGINS_HERE);
-
-// Initialize a markdown parser
-const mdParser = new MarkdownIt(/* Markdown-it options */);
-
-// Finish!
-function handleEditorChange({ html, text }) {
-  console.log('handleEditorChange', html, text);
-}
 class TableManageUser extends Component {
   constructor(props) {
     super(props);
     this.state = {
       usersRedux: [],
+      currentPage: 1,
+      itemsPerPage: 5, // Change this to the number of items you want per page
     };
   }
   componentDidMount() {
@@ -43,22 +35,38 @@ class TableManageUser extends Component {
   handleEditUser = (user) => {
     this.props.handleEditUserFromParentKey(user);
   };
+  //pagination 
+  
+  handlePageClick = (data) => {
+    let selected = data.selected;
+    this.setState({ currentPage: selected + 1 })
+  };
+
   render() {
     let arrUsers = this.state.usersRedux;
+    const { currentPage, itemsPerPage } = this.state;
+  
+    // Calculate the index of the first and last items on the current page
+    const indexOfLastItem = currentPage * itemsPerPage;
+    const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+  
+    // Get the items for the current page
+    const currentItems = arrUsers.slice(indexOfFirstItem, indexOfLastItem);
+  
     return (
       <React.Fragment>
         <table id="TableManageUser">
           <tbody>
             <tr>
               <th>Email</th>
-              <th>Fist name</th>
+              <th>First name</th>
               <th>Last name</th>
               <th>Address</th>
               <th>Action</th>
             </tr>
-            {arrUsers &&
-              arrUsers.length > 0 &&
-              arrUsers.map((item, index) => {
+            {currentItems &&
+              currentItems.length > 0 &&
+              currentItems.map((item, index) => {
                 return (
                   <tr key={index}>
                     <td>{item.email}</td>
@@ -83,8 +91,20 @@ class TableManageUser extends Component {
                 );
               })}
           </tbody>
+          <ReactPaginate
+            previousLabel={'previous'}
+            nextLabel={'next'}
+            breakLabel={'...'}
+            breakClassName={'break-me'}
+            pageCount={Math.ceil(arrUsers.length / itemsPerPage)}
+            marginPagesDisplayed={2}
+            pageRangeDisplayed={5}
+            onPageChange={this.handlePageClick}
+            containerClassName={'pagination'}
+            subContainerClassName={'pages pagination'}
+            activeClassName={'active'}
+          />
         </table>
-        <MdEditor style={{height: '500px'}} renderHTML={text => mdParser.render(text)} onChange={handleEditorChange} />
       </React.Fragment>
     );
   }
