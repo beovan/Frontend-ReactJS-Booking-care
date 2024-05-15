@@ -8,14 +8,12 @@ import { withRouter } from "react-router";
 import { changeLanguageApp } from "../../store/actions";
 import * as actions from "../../store/actions";
 import Select from "react-select";
-
 class HomeHeader extends Component {
   constructor(props) {
     super(props);
     this.state = {
       listDoctors: [],
       selectedOption: "",
-      listAll: [],
     };
   }
 
@@ -30,8 +28,8 @@ class HomeHeader extends Component {
   };
   componentDidMount() {
     this.props.fetchAllDoctors();
-    console.log("fdsfds", this.props.fetchAllDoctors());
   }
+
   componentDidUpdate(prevProps, prevState, snapshot) {
     if (prevProps.allDoctors !== this.props.allDoctors) {
       let dataSelect = this.buildDataInputSelect(
@@ -42,6 +40,7 @@ class HomeHeader extends Component {
         listDoctors: dataSelect,
       });
     }
+   
   }
   buildDataInputSelect = (inputData, type) => {
     let result = [];
@@ -57,20 +56,37 @@ class HomeHeader extends Component {
           result.push(object);
         });
       }
+      if (type === "SPECIALTY") {
+        inputData.map((item, index) => {
+          let object = {};
+          object.label = item.name;
+          object.value = item.id;
+          result.push(object);
+        });
+      }
+
+      if (type === "CLINIC") {
+        inputData.map((item, index) => {
+          let object = {};
+          object.label = item.name;
+          object.value = item.id;
+          result.push(object);
+        });
+      }
     }
     return result;
   };
 
   handleChangeSelect = (selectedOption) => {
     this.setState({ selectedOption });
-  
+    console.log("check selectedOption", selectedOption);
+
     // Navigate to the detail page of the selected doctor
     this.props.history.push(`/detail-doctor/${selectedOption.value}`);
   };
 
   render() {
     let language = this.props.language;
-    let { listDoctors } = this.state;
     console.log("check statefdsaf", this.state);
     return (
       <React.Fragment>
@@ -179,11 +195,19 @@ class HomeHeader extends Component {
                   value={this.state.selectedOption}
                   onChange={this.handleChangeSelect}
                   options={this.state.listDoctors}
-                
                   placeholder={
                     <FormattedMessage id="admin.manage-doctor.select-doctor" />
                   }
                 />
+                {/* <Select
+                  className="search-input select-muti"
+                  value={this.state.selectedOption}
+                  onChange={this.handleChangeSelect}
+                  options={this.state.listDoctors}
+                  placeholder={
+                    <FormattedMessage id="admin.manage-doctor.select-doctor" />
+                  }
+                /> */}
               </div>
             </div>
             <div className="content-down">

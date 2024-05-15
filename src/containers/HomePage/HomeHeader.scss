@@ -136,15 +136,23 @@
             margin         : 0 auto;
             padding        : 10px;
             border-radius  : 25px;
-            background     : #f7d800;
+            background     : #f9f7e9;
 
-
+        
             i {
                 margin: 0 5px;
             }
             .select-doctor{
                 height    : 30px;
                 width     : 360px;
+                background: transparent;
+                border    : none;
+                outline   : none;
+                opacity: 0.8;
+            }
+            .select-muti{
+                height    : 30px;
+                width     : 140px;
                 background: transparent;
                 border    : none;
                 outline   : none;
@@ -157,6 +165,7 @@
             //     border    : none;
             //     outline   : none;
             // }
+        
            
         }
     }
