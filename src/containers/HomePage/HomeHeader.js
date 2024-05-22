@@ -31,63 +31,58 @@ class HomeHeader extends Component {
   }
 
   componentDidUpdate(prevProps, prevState, snapshot) {
-    if (prevProps.allDoctors !== this.props.allDoctors) {
-      let dataSelect = this.buildDataInputSelect(
-        this.props.allDoctors,
-        "USERS"
-      );
-      this.setState({
-        listDoctors: dataSelect,
-      });
-    }
+    // if (prevProps.allDoctors !== this.props.allDoctors) {
+    //   let dataSelect = this.buildDataInputSelect(
+    //     this.props.allDoctors,
+    //     "USERS"
+    //   );
+    //   this.setState({
+    //     listDoctors: dataSelect,
+    //   });
+    // }
    
   }
-  buildDataInputSelect = (inputData, type) => {
-    let result = [];
-    let { language } = this.props;
-    if (inputData && inputData.length > 0) {
-      if (type === "USERS") {
-        inputData.map((item, index) => {
-          let object = {};
-          let labelVi = `${item.lastName} ${item.firstName}`;
-          let labelEn = `${item.firstName} ${item.lastName}`;
-          object.label = language === LANGUAGES.VI ? labelVi : labelEn;
-          object.value = item.id;
-          result.push(object);
-        });
-      }
-      if (type === "SPECIALTY") {
-        inputData.map((item, index) => {
-          let object = {};
-          object.label = item.name;
-          object.value = item.id;
-          result.push(object);
-        });
-      }
+  // buildDataInputSelect = (inputData, type) => {
+  //   let result = [];
+  //   let { language } = this.props;
+  //   if (inputData && inputData.length > 0) {
+  //     if (type === "USERS") {
+  //       inputData.map((item, index) => {
+  //         let object = {};
+  //         let labelVi = `${item.lastName} ${item.firstName}`;
+  //         let labelEn = `${item.firstName} ${item.lastName}`;
+  //         object.label = language === LANGUAGES.VI ? labelVi : labelEn;
+  //         object.value = item.id;
+  //         result.push(object);
+  //       });
+  //     }
+  //     if (type === "SPECIALTY") {
+  //       inputData.map((item, index) => {
+  //         let object = {};
+  //         object.label = item.name;
+  //         object.value = item.id;
+  //         result.push(object);
+  //       });
+  //     }
 
-      if (type === "CLINIC") {
-        inputData.map((item, index) => {
-          let object = {};
-          object.label = item.name;
-          object.value = item.id;
-          result.push(object);
-        });
-      }
-    }
-    return result;
-  };
+  //     if (type === "CLINIC") {
+  //       inputData.map((item, index) => {
+  //         let object = {};
+  //         object.label = item.name;
+  //         object.value = item.id;
+  //         result.push(object);
+  //       });
+  //     }
+  //   }
+  //   return result;
+  // };
 
-  handleChangeSelect = (selectedOption) => {
-    this.setState({ selectedOption });
-    console.log("check selectedOption", selectedOption);
-
-    // Navigate to the detail page of the selected doctor
-    this.props.history.push(`/detail-doctor/${selectedOption.value}`);
-  };
-
+  changeToSearch = (change) => {
+    this.props.history.push("/search-result");
+  }
   render() {
     let language = this.props.language;
-    console.log("check statefdsaf", this.state);
+    // console.log("check statefdsaf", this.state);
     return (
       <React.Fragment>
         <div className="home-header-container">
@@ -183,31 +178,15 @@ class HomeHeader extends Component {
               <div className="title2">
                 <FormattedMessage id="banner.title2" />
               </div>
-              <div className="search">
+              <div className="search"
+              onClick={() => this.changeToSearch()}
+              >
                 <i className="fas fa-search"></i>
-                {/* <input
+                <input
                   type="text"
                   className="search-input"
                   placeholder="Tìm chuyên khoa khám bệnh"
-                /> */}
-                <Select
-                  className="search-input select-doctor"
-                  value={this.state.selectedOption}
-                  onChange={this.handleChangeSelect}
-                  options={this.state.listDoctors}
-                  placeholder={
-                    <FormattedMessage id="admin.manage-doctor.select-doctor" />
-                  }
                 />
-                {/* <Select
-                  className="search-input select-muti"
-                  value={this.state.selectedOption}
-                  onChange={this.handleChangeSelect}
-                  options={this.state.listDoctors}
-                  placeholder={
-                    <FormattedMessage id="admin.manage-doctor.select-doctor" />
-                  }
-                /> */}
               </div>
             </div>
             <div className="content-down">

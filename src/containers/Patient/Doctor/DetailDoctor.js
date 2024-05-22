@@ -40,7 +40,7 @@ class DetailDoctor extends Component {
     let { language } = this.props;
 
     let { detailDoctor } = this.state;
-
+    console.log("check detailDoctor", detailDoctor);
     let nameVi = "",
       nameEn = "";
     if (detailDoctor && detailDoctor.positionData) {
