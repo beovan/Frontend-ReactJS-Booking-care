@@ -1,3 +1,4 @@
+
 export const path = {
     HOME: '/',
     HOMEPAGE: '/home',
@@ -9,6 +10,7 @@ export const path = {
     DETAIL_CLINIC: '/detail-clinic/:id',
     VERIFY_EMAIL_BOOKING: '/verify-booking',
     SEARCH_RESULT: '/search-result',
+    REGISTER: "/REGISTER", // Add this line
 };
 
 export const LANGUAGES = {

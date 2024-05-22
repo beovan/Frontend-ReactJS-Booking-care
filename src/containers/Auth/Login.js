@@ -39,10 +39,8 @@ class Login extends Component {
       }
       if (data && data.errCode === 0) {
         this.props.userLoginSuccess(data.user);
-
-        console.log("login success");
+        toast.success("Login success!");
       }
-      toast.success("Login success!");
     } catch (e) {
       if (e.response) {
         if (e.response.data) {
@@ -125,7 +123,9 @@ class Login extends Component {
               </button>
             </div>
             <div className="col-12">
-              <span className="forgot password">Forgot your password?</span>
+            <span className="forgot password">Don't have an account?
+              <a href="/register">Register</a>
+              </span>
             </div>
             <div className="col-12 text-center">
               <span className="text-other-login">Or Login with:</span>
