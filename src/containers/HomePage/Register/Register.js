@@ -39,6 +39,17 @@ handleRegister = async () => {
     });
 
     // Check if password and confirmPassword are the same
+    if (
+      this.state.password === "" ||
+      this.state.confirmPassword === "" ||
+      this.state.username === ""
+    ) {
+      
+      this.setState({
+        errMessage: "Please fill all fields",
+      });
+      return;
+    }
     if (this.state.password !== this.state.confirmPassword) {
         this.setState({
             errMessage: "Passwords do not match",
@@ -82,20 +93,38 @@ handleRegister = async () => {
       this.handleRegister();
     }
   };
-  signInWithGoogle = () => {
+  signInWithGoogle = async () => {
     const auth = getAuth(app);
     const provider = new GoogleAuthProvider();
     signInWithPopup(auth, provider)
-      .then((result) => {
-        console.log(result);
-        const credential = GoogleAuthProvider.credentialFromResult(result);
-        console.log(credential);
-        const token = credential.accessToken;
-        const user = result.user;
+      .then(async (result) => {
+        try {
+          console.log(result);
+          const credential = GoogleAuthProvider.credentialFromResult(result);
+          console.log(credential);
+          const token = credential.accessToken;
+          const user = result.user;
 
-        // Access the user's name
-        const userName = user.displayName;
-        console.log(userName);
+          // Access the user's name
+          let data = await createNewPatient({
+            uid: user.uid,
+            email: user.email,
+            firstName: user.displayName,
+            image: user.photoURL,
+            accessToken: credential.accessToken,
+        });
+          if (data && data.errCode !== 0) {
+            this.setState({
+              errMessage: data.errMessage,
+            });
+          }
+          console.log(this.state.errMessage);
+          if (data && data.errCode === 0) {
+            toast.success("register with google success!");
+          }
+        } catch (error) {
+          console.error(error);
+        }
       })
       .catch((error) => {
         const errorCode = error.code;

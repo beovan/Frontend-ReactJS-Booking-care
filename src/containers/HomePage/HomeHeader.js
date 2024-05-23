@@ -14,6 +14,7 @@ class HomeHeader extends Component {
     this.state = {
       listDoctors: [],
       selectedOption: "",
+      isLoginFormOpen: false,
     };
   }
 
@@ -29,6 +30,11 @@ class HomeHeader extends Component {
   componentDidMount() {
     this.props.fetchAllDoctors();
   }
+  toggleLoginForm = () => {
+    this.setState((prevState) => ({
+      isLoginFormOpen: !prevState.isLoginFormOpen,
+    }));
+  };
 
   componentDidUpdate(prevProps, prevState, snapshot) {
     // if (prevProps.allDoctors !== this.props.allDoctors) {
@@ -40,7 +46,6 @@ class HomeHeader extends Component {
     //     listDoctors: dataSelect,
     //   });
     // }
-   
   }
   // buildDataInputSelect = (inputData, type) => {
   //   let result = [];
@@ -79,7 +84,7 @@ class HomeHeader extends Component {
 
   changeToSearch = (change) => {
     this.props.history.push("/search-result");
-  }
+  };
   render() {
     let language = this.props.language;
     // console.log("check statefdsaf", this.state);
@@ -140,8 +145,24 @@ class HomeHeader extends Component {
             </div>
             <div className="right-content">
               <div className="support">
-                <i className="fas fa-question-circle"></i>
-                <FormattedMessage id="home-header.support" />
+                {/* <i className="fas fa-question-circle"></i>
+                <FormattedMessage id="home-header.support" /> */}
+                <div className="login-wrapper">
+                  <button id="login-button" onClick={this.toggleLoginForm}>
+                <FormattedMessage id="home-header.login" /> 
+                  </button>
+                  <div className="login-container">
+                    <form
+                      className={`login-form ${
+                        this.state.isLoginFormOpen ? "open" : ""
+                      }`}
+                    >
+                      <input type="text" placeholder="Username" />
+                      <input type="password" placeholder="Password" />
+                      <input type="submit" value="SUBMIT" />
+                    </form>
+                  </div>
+                </div>
               </div>
               <div
                 className={
@@ -178,9 +199,7 @@ class HomeHeader extends Component {
               <div className="title2">
                 <FormattedMessage id="banner.title2" />
               </div>
-              <div className="search"
-              onClick={() => this.changeToSearch()}
-              >
+              <div className="search" onClick={() => this.changeToSearch()}>
                 <i className="fas fa-search"></i>
                 <input
                   type="text"

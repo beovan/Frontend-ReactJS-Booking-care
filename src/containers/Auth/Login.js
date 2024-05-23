@@ -31,6 +31,15 @@ class Login extends Component {
       errMessage: "",
     });
     try {
+      if (
+        this.state.username === "" ||
+        this.state.password === ""
+      ) {
+        this.setState({
+          errMessage: "Please fill all fields",
+        });
+        return;
+      }
       let data = await handleLoginApi(this.state.username, this.state.password);
       if (data && data.errCode !== 0) {
         this.setState({
