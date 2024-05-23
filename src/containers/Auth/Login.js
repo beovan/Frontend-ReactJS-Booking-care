@@ -9,6 +9,10 @@ import "./Login.scss";
 import { FormattedMessage } from "react-intl";
 import { handleLoginApi } from "../../services/userService";
 import { toast } from "react-toastify";
+import { getAuth, signInWithPopup, GoogleAuthProvider } from "firebase/auth";
+import { app, auth, provider } from "../../config/firebase";
+
+// import "./Login.scss";
 class Login extends Component {
   constructor(props) {
     super(props);
@@ -31,19 +35,19 @@ class Login extends Component {
       errMessage: "",
     });
     try {
-      if (
-        this.state.username === "" ||
-        this.state.password === ""
-      ) {
+      if (this.state.username === "" || this.state.password === "") {
         this.setState({
           errMessage: "Please fill all fields",
         });
         return;
       }
-      let data = await handleLoginApi(this.state.username, this.state.password);
+      let data = await handleLoginApi({
+        username: this.state.username,
+        password: this.state.password,
+      });
       if (data && data.errCode !== 0) {
         this.setState({
-          errMessage: data.message,
+          errMessage: data.errMessage,
         });
       }
       if (data && data.errCode === 0) {
@@ -61,6 +65,49 @@ class Login extends Component {
     }
   };
 
+  signInWithGoogle = async () => {
+    const auth = getAuth(app);
+    const provider = new GoogleAuthProvider();
+    signInWithPopup(auth, provider)
+      .then(async (result) => {
+        try {
+          console.log(result);
+          const credential = GoogleAuthProvider.credentialFromResult(result);
+          console.log(credential);
+          const token = credential.accessToken;
+          const user = result.user;
+
+          // Access the user's name
+          let data = await handleLoginApi({
+            uid: user.uid,
+            email: user.email,
+            accessToken: credential.accessToken,
+          });
+          if (data && data.errCode !== 0) {
+            this.setState({
+              errMessage: data.errMessage,
+            });
+          }
+          console.log(this.state.errMessage);
+          if (data && data.errCode === 0) {
+            toast.success("login with google success!");
+            setInterval(() => {
+              this.props.history.push("/home");
+            }, 2000);
+          }
+        } catch (error) {
+          console.error(error);
+        }
+      })
+      .catch((error) => {
+        const errorCode = error.code;
+        const errorMessage = error.message;
+        const email = error.email;
+        const credential = GoogleAuthProvider.credentialFromError(error);
+        console.log(errorCode, errorMessage, email, credential);
+      });
+  };
+
   handleShowhidePassword = () => {
     this.setState({
       isShowPassword: !this.state.isShowPassword,
@@ -71,7 +118,7 @@ class Login extends Component {
     if (event.key === "Enter" || event.keyCode === 13) {
       this.handleLogin();
     }
-  }
+  };
   render() {
     // const { username, password, loginError } = this.state;
     // const { lang } = this.props;
@@ -132,15 +179,20 @@ class Login extends Component {
               </button>
             </div>
             <div className="col-12">
-            <span className="forgot password">Don't have an account?
-              <a href="/register">Register</a>
+              <span className="forgot password">
+                Don't have an account?
+                <a href="/register">Register</a>
               </span>
             </div>
             <div className="col-12 text-center">
               <span className="text-other-login">Or Login with:</span>
             </div>
             <div className="col-12 social-login">
-              <i className="fab fa-google-plus-g google"></i>
+              <span onClick={this.signInWithGoogle}>
+                {" "}
+                <i className="fab fa-google-plus-g google"></i>
+              </span>
+
               <i className="fab fa-facebook-f facebook"></i>
             </div>
           </div>

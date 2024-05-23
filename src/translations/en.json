@@ -10,7 +10,7 @@
         "check-health": "General health check",
         "support": "Support",
         "welcome": "Welcome, ",
-        "Login": "Login"
+        "login": "Login"
     },
     "banner": {
         "title1": "MEDICAL BACKGROUND",

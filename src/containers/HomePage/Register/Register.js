@@ -7,7 +7,6 @@ import { app, auth, provider } from "../../../config/firebase";
 // import "./Login.scss";
 import { toast } from "react-toastify";
 import {
-  handleLoginApi,
   createNewPatient,
 } from "../../../services/userService";
 class Register extends Component {
@@ -71,6 +70,9 @@ handleRegister = async () => {
       console.log(this.state.errMessage);
       if (data && data.errCode === 0) {
         toast.success("register success!");
+        setInterval(() => {
+          this.props.history.push("/login");
+        },2000);
       }
     } catch (e) {
       if (e.response) {
@@ -121,6 +123,9 @@ handleRegister = async () => {
           console.log(this.state.errMessage);
           if (data && data.errCode === 0) {
             toast.success("register with google success!");
+            setInterval(() => {
+              this.props.history.push("/login");
+            },2000);
           }
         } catch (error) {
           console.error(error);
