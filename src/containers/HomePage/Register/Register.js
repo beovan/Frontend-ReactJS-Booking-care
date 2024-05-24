@@ -3,11 +3,16 @@ import { connect } from "react-redux";
 import { getAuth, signInWithPopup, GoogleAuthProvider } from "firebase/auth";
 import { changeLanguageApp } from "../../../store/actions";
 import { app, auth, provider } from "../../../config/firebase";
-
+import { LANGUAGES ,USER_ROLE } from "../../../utils";
+import { FormattedMessage } from "react-intl";
+import _ from 'lodash';
+import * as actions from "../../../store/actions";
 // import "./Login.scss";
 import { toast } from "react-toastify";
+import { withRouter } from 'react-router-dom';
 import {
   createNewPatient,
+  handleLoginApi
 } from "../../../services/userService";
 class Register extends Component {
   constructor(props) {
@@ -20,7 +25,27 @@ class Register extends Component {
       confirmPassword: "",
     };
   }
+  componentDidMount(){
+    let {userInfo} = this.props;
+    let menu = [];
+    if (userInfo && !_.isEmpty(userInfo)){
+    let role = userInfo.roleId;
+      if (role === USER_ROLE.ADMIN){
+        // menu = adminMenu;
+      } 
 
+      if (role === USER_ROLE.DOCTOR){
+        // menu = doctorMenu;
+      }
+      if (role === USER_ROLE.PATIENT){
+        menu = [];
+        this.props.history.push("/home");
+      }
+    }
+    this.setState({
+      menuApp: menu
+    })
+  }
   handleOnchangeUsername = (event) => {
     this.setState({ username: event.target.value });
   };
@@ -113,16 +138,29 @@ handleRegister = async () => {
             email: user.email,
             firstName: user.displayName,
             image: user.photoURL,
-            accessToken: credential.accessToken,
+            // accessToken: credential.accessToken,
         });
           if (data && data.errCode !== 0) {
             this.setState({
               errMessage: data.errMessage,
             });
+            if (this.state.errMessage === "Your email is already in used. Please try another email") {
+              if (data) {
+                let data = await handleLoginApi({
+                  uid: user.uid,
+                  email: user.email,
+                  // accessToken: credential.accessToken,
+                });
+                this.props.userLoginSuccess(data.user); 
+                this.props.history.push("/home");
+              }          
+            }
           }
+ 
           console.log(this.state.errMessage);
           if (data && data.errCode === 0) {
             toast.success("register with google success!");
+            this.props.userLoginSuccess(data.user); 
             setInterval(() => {
               this.props.history.push("/login");
             },2000);
@@ -252,13 +290,15 @@ const mapStateToProps = (state) => {
   return {
     isLoggedIn: state.user.isLoggedIn,
     language: state.app.language,
-  };
+};
 };
 
 const mapDispatchToProps = (dispatch) => {
   return {
     changeLanguageAppRedux: (language) => dispatch(changeLanguageApp(language)),
+    userLoginSuccess: (userInfo) =>
+      dispatch(actions.userLoginSuccess(userInfo)),
   };
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(Register);
+export default  withRouter(connect(mapStateToProps, mapDispatchToProps)(Register));

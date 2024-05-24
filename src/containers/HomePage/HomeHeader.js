@@ -3,17 +3,25 @@ import { connect } from "react-redux";
 import "./HomeHeader.scss";
 import logo from "../../assets/logo.svg";
 import { FormattedMessage } from "react-intl";
-import { LANGUAGES } from "../../utils";
+import { LANGUAGES, USER_ROLE } from "../../utils";
+
 import { withRouter } from "react-router";
 import { changeLanguageApp } from "../../store/actions";
 import * as actions from "../../store/actions";
 import Select from "react-select";
+import { handleLoginApi } from "../../services/userService";
+import { toast } from "react-toastify";
+import { getAuth, signInWithPopup, GoogleAuthProvider } from "firebase/auth";
+import { app, auth, provider } from "../../config/firebase";
+import _ from "lodash";
 class HomeHeader extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      listDoctors: [],
-      selectedOption: "",
+      username: "",
+      password: "",
+      isShowPassword: false,
+      errMessage: "",
       isLoginFormOpen: false,
     };
   }
@@ -36,7 +44,7 @@ class HomeHeader extends Component {
     }));
   };
 
-  componentDidUpdate(prevProps, prevState, snapshot) {
+  componentDidwUpdate(prevProps, prevState, snapshot) {
     // if (prevProps.allDoctors !== this.props.allDoctors) {
     //   let dataSelect = this.buildDataInputSelect(
     //     this.props.allDoctors,
@@ -46,6 +54,18 @@ class HomeHeader extends Component {
     //     listDoctors: dataSelect,
     //   });
     // }
+    let { userInfo } = this.props;
+    let menu = [];
+    if (userInfo && !_.isEmpty(userInfo)) {
+      let role = userInfo.roleId;
+      if (role === USER_ROLE.PATIENT) {
+        // menu = adminMenu;
+      }
+
+      if (role === USER_ROLE.DOCTOR) {
+        // menu = doctorMenu;
+      }
+    }
   }
   // buildDataInputSelect = (inputData, type) => {
   //   let result = [];
@@ -85,9 +105,103 @@ class HomeHeader extends Component {
   changeToSearch = (change) => {
     this.props.history.push("/search-result");
   };
+
+  handleOnchangeUsername = (event) => {
+    this.setState({ username: event.target.value });
+  };
+  handleOnchangePassword = (event) => {
+    this.setState({ password: event.target.value });
+  };
+  handleLogin = async () => {
+    this.setState({
+      errMessage: "",
+    });
+    try {
+      if (this.state.username === "" || this.state.password === "") {
+        this.setState({
+          errMessage: "Please fill all fields",
+        });
+        return;
+      }
+      let data = await handleLoginApi({
+        email: this.state.username,
+        password: this.state.password,
+      });
+      if (data && data.errCode !== 0) {
+        this.setState({
+          errMessage: data.errMessage,
+        });
+      }
+      if (data && data.errCode === 0) {
+        this.props.userLoginSuccess(data.user);
+        toast.success("Login success!");
+      }
+    } catch (e) {
+      if (e.response) {
+        if (e.response.data) {
+          this.setState({
+            errMessage: e.response.data.message,
+          });
+        }
+      }
+    }
+  };
+
+  signInWithGoogle = async () => {
+    const auth = getAuth(app);
+    const provider = new GoogleAuthProvider();
+    signInWithPopup(auth, provider)
+      .then(async (result) => {
+        try {
+          console.log(result);
+          const credential = GoogleAuthProvider.credentialFromResult(result);
+          console.log(credential);
+          const token = credential.accessToken;
+          const user = result.user;
+
+          // Access the user's name
+          let data = await handleLoginApi({
+            uid: user.uid,
+            email: user.email,
+            // accessToken: credential.accessToken,
+          });
+          if (data && data.errCode !== 0) {
+            this.setState({
+              errMessage: data.errMessage,
+            });
+          }
+          console.log(this.state.errMessage);
+          if (data && data.errCode === 0) {
+            toast.success("login with google success!");
+            this.props.userLoginSuccess(data.user);
+            setInterval(() => {
+              this.props.history.push("/home");
+            }, 2000);
+          }
+        } catch (error) {
+          console.error(error);
+        }
+      })
+      .catch((error) => {
+        const errorCode = error.code;
+        const errorMessage = error.message;
+        const email = error.email;
+        const credential = GoogleAuthProvider.credentialFromError(error);
+        console.log(errorCode, errorMessage, email, credential);
+      });
+  };
+
+  handleShowhidePassword = () => {
+    this.setState({
+      isShowPassword: !this.state.isShowPassword,
+    });
+  };
+
   render() {
-    let language = this.props.language;
-    // console.log("check statefdsaf", this.state);
+    const { processLogout, language, userInfo, isLoggedIn } = this.props;
+
+    console.log("check statefdsaf", this.state);
+    console.log("check props", this.props);
     return (
       <React.Fragment>
         <div className="home-header-container">
@@ -147,22 +261,82 @@ class HomeHeader extends Component {
               <div className="support">
                 {/* <i className="fas fa-question-circle"></i>
                 <FormattedMessage id="home-header.support" /> */}
-                <div className="login-wrapper">
-                  <button id="login-button" onClick={this.toggleLoginForm}>
-                <FormattedMessage id="home-header.login" /> 
-                  </button>
-                  <div className="login-container">
-                    <form
-                      className={`login-form ${
-                        this.state.isLoginFormOpen ? "open" : ""
-                      }`}
-                    >
-                      <input type="text" placeholder="Username" />
-                      <input type="password" placeholder="Password" />
-                      <input type="submit" value="SUBMIT" />
-                    </form>
+                {isLoggedIn === false && (
+                  <div className="login-wrapper">
+                    <button id="login-button" onClick={this.toggleLoginForm}>
+                      <FormattedMessage id="home-header.login" />
+                    </button>
+                    <div className="login-container">
+                      <form
+                        className={`login-form ${
+                          this.state.isLoginFormOpen ? "open" : ""
+                        }`}
+                      >
+                        <input
+                          type="text"
+                          placeholder="Username"
+                          value={this.state.username}
+                          onChange={(event) =>
+                            this.handleOnchangeUsername(event)
+                          }
+                        />
+                        <input
+                          placeholder="Password"
+                          type={this.state.isShowPassword ? "text" : "password"}
+                          onChange={(event) => {
+                            this.handleOnchangePassword(event);
+                          }}
+                        />
+                        <span
+                          onClick={() => {
+                            this.handleShowhidePassword();
+                          }}
+                        >
+                          <i
+                            className={
+                              this.state.isShowPassword
+                                ? "far fa-eye"
+                                : "far fa-eye-slash"
+                            }
+                          ></i>
+                        </span>
+                        <div className="col-12">
+                          <span className="forgot password">
+                            Don't have an account?
+                            <a href="/register">Register</a>
+                          </span>
+                        </div>
+                        <button
+                          className="btn-login"
+                          onClick={() => {
+                            this.handleLogin();
+                          }}
+                        >
+                          Login
+                        </button>
+                        <div className="col-12 social-login">
+                          <span onClick={this.signInWithGoogle}>
+                            {" "}
+                            <i className="fab fa-google-plus-g google"></i>
+                          </span>
+
+                          <i className="fab fa-facebook-f facebook"></i>
+                        </div>
+                      </form>
+                    </div>
                   </div>
-                </div>
+                )}
+                {isLoggedIn === true && (
+                  <div className="wrap-user-info">
+                    <span className="welcome">
+                      {userInfo && userInfo.firstName ? userInfo.firstName : ""}
+                    </span>
+                {/* nút logout */}
+                    <div className="btn btn-logout" onClick={processLogout}>
+                      <i className="fas fa-sign-out-alt"></i>
+                    </div>
+                  </div>
+                )}
               </div>
               <div
                 className={
@@ -272,7 +446,6 @@ const mapStateToProps = (state) => {
     isLoggedIn: state.user.isLoggedIn,
     userInfo: state.user.userInfo,
     language: state.app.language,
-    allDoctors: state.admin.allDoctors,
   };
 };
 
@@ -280,6 +453,9 @@ const mapDispatchToProps = (dispatch) => {
   return {
     fetchAllDoctors: () => dispatch(actions.fetchAllDoctors()),
     changeLanguageAppRedux: (language) => dispatch(changeLanguageApp(language)),
+    processLogout: () => dispatch(actions.processLogout()),
+    userLoginSuccess: (userInfo) =>
+      dispatch(actions.userLoginSuccess(userInfo)),
   };
 };
 

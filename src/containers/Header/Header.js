@@ -8,6 +8,7 @@ import "./Header.scss";
 import { LANGUAGES ,USER_ROLE } from "../../utils";
 import { FormattedMessage } from "react-intl";
 import _ from 'lodash';
+import { withRouter } from 'react-router-dom';
 
 class Header extends Component {
   constructor(props){
@@ -23,13 +24,17 @@ class Header extends Component {
     let {userInfo} = this.props;
     let menu = [];
     if (userInfo && !_.isEmpty(userInfo)){
-      let role = userInfo.roleId;
+    let role = userInfo.roleId;
       if (role === USER_ROLE.ADMIN){
         menu = adminMenu;
       } 
 
       if (role === USER_ROLE.DOCTOR){
         menu = doctorMenu;
+      }
+      if (role === USER_ROLE.PATIENT){
+        menu = [];
+        this.props.history.push("/home");
       }
     }
     this.setState({
@@ -95,4 +100,4 @@ const mapDispatchToProps = (dispatch) => {
   };
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(Header);
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Header));

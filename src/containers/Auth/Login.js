@@ -42,7 +42,7 @@ class Login extends Component {
         return;
       }
       let data = await handleLoginApi({
-        username: this.state.username,
+        email: this.state.username,
         password: this.state.password,
       });
       if (data && data.errCode !== 0) {
@@ -66,6 +66,9 @@ class Login extends Component {
   };
 
   signInWithGoogle = async () => {
+    this.setState({
+      errMessage: "",
+    });
     const auth = getAuth(app);
     const provider = new GoogleAuthProvider();
     signInWithPopup(auth, provider)
@@ -81,19 +84,17 @@ class Login extends Component {
           let data = await handleLoginApi({
             uid: user.uid,
             email: user.email,
-            accessToken: credential.accessToken,
+            // accessToken: credential.accessToken,
           });
           if (data && data.errCode !== 0) {
             this.setState({
               errMessage: data.errMessage,
             });
           }
-          console.log(this.state.errMessage);
+       
           if (data && data.errCode === 0) {
             toast.success("login with google success!");
-            setInterval(() => {
-              this.props.history.push("/home");
-            }, 2000);
+            this.props.userLoginSuccess(data.user);
           }
         } catch (error) {
           console.error(error);
@@ -124,6 +125,7 @@ class Login extends Component {
     // const { lang } = this.props;
 
     return (
+
       <div className="login-background">
         <div className="login-container">
           <div className="login-content row">
