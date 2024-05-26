@@ -97,6 +97,10 @@ const postSendRemedy = (data) => {
 const createNewPatient = (data) => {
   return axios.post("/api/create-new-patient", data);
 }
+
+const handleForgotPassword = (data) => {
+  return axios.post("/api/send-forgot-password", data);
+}
 export {
   handleLoginApi,
   getAllUsers,
@@ -122,5 +126,6 @@ export {
   getAllDetailClinicById,
   getAllPatientForDoctor,
   postSendRemedy,
-  createNewPatient
+  createNewPatient,
+  handleForgotPassword
 };

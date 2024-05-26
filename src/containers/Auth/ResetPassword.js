@@ -1,12 +1,8 @@
 import React, { Component, Fragment, useState } from "react";
 import { connect } from "react-redux";
-import HomeHeader from "../HomePage/HomeHeader";
-import * as actions from "../../store/actions";
 import { changeLanguageApp } from "../../store/actions";
 import "./ForgotPassword.scss";
-import { auth } from "../../config/firebase";
-import { sendPasswordResetEmail } from "firebase/auth";
-
+import { handleForgotPassword } from "../../services/userService";  
 class ForgotPassword extends Component {
   constructor(props) {
     super(props);
