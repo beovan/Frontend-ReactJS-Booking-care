@@ -22,6 +22,7 @@ import DetailSpecialty from "./Patient/Specialty/DetailSpecialty";
 import DetailClinic from "./Patient/Clinic/DetailClinic"
 import SearchResult from "./HomePage/Search/SearchResult";
 import Register from "./HomePage/Register/Register.js";
+import ForgotPassword from "./Auth/ForgotPassword.js";
 class App extends Component {
   handlePersistorState = () => {
     const { persistor } = this.props;
@@ -68,7 +69,7 @@ class App extends Component {
                   <Route path={path.VERIFY_EMAIL_BOOKING} component={VerifyEmail} />
                   <Route path={path.SEARCH_RESULT} component={SearchResult}/>
                   <Route path={path.REGISTER} component={Register}/>
-
+                  <Route path={path.FORGOT_PASSWORD} component={ForgotPassword}/>
                 </Switch>
               </CustomScrollbars>
             </span>

@@ -10,7 +10,8 @@ export const path = {
     DETAIL_CLINIC: '/detail-clinic/:id',
     VERIFY_EMAIL_BOOKING: '/verify-booking',
     SEARCH_RESULT: '/search-result',
-    REGISTER: "/REGISTER", // Add this line
+    REGISTER: "/register", 
+    FORGOT_PASSWORD: "/forgot-password",
 };
 
 export const LANGUAGES = {

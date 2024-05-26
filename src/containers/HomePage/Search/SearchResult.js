@@ -128,7 +128,7 @@ class SearchResult extends Component {
               >
                 {Object.keys(itemsByType).map((type) => (
                   <React.Fragment>
-                    <div className="typle-title">
+                    <div className="type-title">
                       <h3>{type}</h3>
                     </div>
                     {itemsByType[type].map((item, index) => (

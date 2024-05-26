@@ -127,6 +127,38 @@
                         font-style: normal;
                         box-shadow: 0 4px 0 darken(#49BCE2, 5%);
                     }
+                    .social-login {
+                        display        : Flex;
+                        text-align     : center;
+                        justify-content: center;
+                        margin-top     : 10px;
+                        cursor: pointer;
+        
+                        .google {
+                            font-size      : 30px;
+                            background     : #c32424;
+                            border-radius  : 50%;
+                            height         : 50px;
+                            width          : 50px;
+                            display        : flex;
+                            align-items    : center;
+                            justify-content: center;
+                            color          : white;
+                            margin-right   : 10px;
+                        }
+        
+                        .facebook {
+                            font-size      : 30px;
+                            background     : #307aaf;
+                            border-radius  : 50%;
+                            height         : 50px;
+                            width          : 50px;
+                            display        : flex;
+                            align-items    : center;
+                            justify-content: center;
+                            color          : white;
+                        }
+                    }
                 }
 
                 @keyframes slide {
