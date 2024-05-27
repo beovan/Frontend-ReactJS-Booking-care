@@ -12,6 +12,7 @@ export const path = {
     SEARCH_RESULT: '/search-result',
     REGISTER: "/register", 
     FORGOT_PASSWORD: "/forgot-password",
+    RESET_PASSWORD: "/reset-password",
 };
 
 export const LANGUAGES = {

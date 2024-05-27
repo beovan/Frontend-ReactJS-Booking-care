@@ -1,11 +1,8 @@
 import React, { Component, Fragment, useState } from "react";
 import { connect } from "react-redux";
-import HomeHeader from "../HomePage/HomeHeader";
-import * as actions from "../../store/actions";
 import { changeLanguageApp } from "../../store/actions";
 import "./ForgotPassword.scss";
-import { auth } from "../../config/firebase";
-import { sendPasswordResetEmail } from "firebase/auth";
+import { handleForgotPassword } from "../../services/userService";
 
 class ForgotPassword extends Component {
   constructor(props) {
@@ -15,16 +12,38 @@ class ForgotPassword extends Component {
     };
   }
 
-  componentDidMount() {}
-
-
   handleEmailChange = (event) => {
     this.setState({ email: event.target.value });
   };
 
+  handleResetPassword = async () => {
+    if (this.state.email === "") {
+      alert("Please fill in your email.");
+      return;
+    }
+    try {
+      if (this.state.email) {
+        const response = await handleForgotPassword({ email: this.state.email });
+        if (response && response.status === 200) {
+          alert('Please check your email to reset your password!');
+          return response;
+        } else if (response) {
+          alert(`Received response with status code ${response.status}`);
+        } else {
+          alert('No response received from server');
+        }
+
+      }
+    
+    } catch (error) {
+      alert('An error occurred while resetting password');
+      console.log("handleResetPassword -> error", error);
+    }
+  };
+
   render() {
     return (
-      <div class="row">
+      <div class="row-forgot">
         <h1>Forgot Password</h1>
         <h6 class="information-text">
           Enter your registered email to reset your password.
@@ -34,11 +53,12 @@ class ForgotPassword extends Component {
             type="email"
             name="user_email"
             id="user_email"
+            onChange={this.handleEmailChange}
           />
           <p>
             <label for="username">Email</label>
           </p>
-          <button  >Reset Password</button>
+          <button onClick={this.handleResetPassword}>Reset Password</button>
         </div>
         <div class="footer">
           <h5>

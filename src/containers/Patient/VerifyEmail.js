@@ -28,13 +28,11 @@ class VerifyEmail extends Component {
           statusVerify: true,
           errCode: res.errCode,
         });
-        console.log("1");
       } else {
         this.setState({
           statusVerify: true,
           errCode: res && res.errCode ? res.errCode : -1,
         });
-        console.log("2");
       }
     }
   }
