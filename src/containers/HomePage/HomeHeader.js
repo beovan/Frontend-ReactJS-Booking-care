@@ -305,6 +305,12 @@ class HomeHeader extends Component {
                             Don't have an account?
                             <a href="/register">Register</a>
                           </span>
+                          <span>
+                            or
+                          </span>
+                          <span className="forgot password">
+                            <a href="/forgot-password">Forgot password?</a>
+                          </span>
                         </div>
                         <button
                           className="btn-login"

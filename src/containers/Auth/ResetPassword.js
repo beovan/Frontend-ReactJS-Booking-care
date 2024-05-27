@@ -2,7 +2,8 @@ import React, { Component } from "react";
 import { connect } from "react-redux";
 import { changeLanguageApp } from "../../store/actions";
 import "./ResetPassword.scss";
-import { resetPassword } from "../../services/userService";  
+import { handleResetPassword } from "../../services/userService";  
+import { withRouter } from 'react-router-dom';
 
 class ResetPassword extends Component {
   constructor(props) {
@@ -20,7 +21,49 @@ class ResetPassword extends Component {
   handleConfirmPasswordChange = (event) => {
     this.setState({ confirmPassword: event.target.value });
   };
+  async componentDidMount() {
+    
+  }
+  handleResetPassword = async () => {
+    if (!this.state.password || this.state.password === "") {
+      alert("Please enter your password.");
+      return;
+    }
+    else if (!this.state.confirmPassword || this.state.confirmPassword === "") {
+      alert("Please enter your confirm password.");
+      return;
+    }
+    else if (this.state.password !== this.state.confirmPassword) {
+      alert("Password and confirm password do not match.");
+      return;
+    }
 
+
+      
+    let urlParams = new URLSearchParams(this.props.location.search);
+    let token = urlParams.get("token");
+    let password = this.state.password;
+    let res = await handleResetPassword({
+      accessToken: token,
+      password: password,
+    });
+
+    console.log(res && res.errCode === 0)
+    if (res && res.errCode === 0) {
+      alert("Password has been reset");
+      this.setState({
+        errCode: res.errCode,
+        errMessage: "Password has been reset"
+      });
+      this.props.history.push("/home");
+    } else {
+      this.setState({
+        errCode: res && res.errCode ? res.errCode : -1,
+        errMessage: res && res.errMessage ? res.errMessage : "An error occurred while resetting password"
+      });
+    }
+  }
+  
   render() {
     return (
       <div class="row-forgot">
@@ -47,7 +90,7 @@ class ResetPassword extends Component {
           <p>
             <label for="confirm_password">Confirm Password</label>
           </p>
-          <button>Reset Password</button>
+          <button onClick={this.handleResetPassword}>Reset Password</button>
         </div>
       </div>
     );
@@ -68,4 +111,4 @@ const mapDispatchToProps = (dispatch) => {
   };
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(ResetPassword);
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(ResetPassword));

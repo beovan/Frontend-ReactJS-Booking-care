@@ -12,6 +12,8 @@ class ForgotPassword extends Component {
     };
   }
 
+
+  
   handleEmailChange = (event) => {
     this.setState({ email: event.target.value });
   };
@@ -60,14 +62,14 @@ class ForgotPassword extends Component {
           </p>
           <button onClick={this.handleResetPassword}>Reset Password</button>
         </div>
-        <div class="footer">
+        {/* <div class="footer">
           <h5>
             New here? <a href="#">Sign Up.</a>
           </h5>
           <h5>
             Already have an account? <a href="#">Sign In.</a>
           </h5>
-        </div>
+        </div> */}
       </div>
     );
   }
