@@ -69,8 +69,6 @@ class Login extends Component {
     this.setState({
       errMessage: "",
     });
-    const auth = getAuth(app);
-    const provider = new GoogleAuthProvider();
     signInWithPopup(auth, provider)
       .then(async (result) => {
         try {
@@ -195,7 +193,10 @@ class Login extends Component {
                 <i className="fab fa-google-plus-g google"></i>
               </span>
 
-              <i className="fab fa-facebook-f facebook"></i>
+                <span onClick={this.signInWithFacebook}>
+                <i className="fab fa-facebook-f facebook"></i>
+
+                </span>
             </div>
           </div>
         </div>
