@@ -2,7 +2,7 @@
 export const path = {
     HOME: '/',
     HOMEPAGE: '/home',
-    LOGIN: '/login',
+    LOGIN: '/login_admin',
     LOG_OUT: '/logout',
     SYSTEM: '/system',
     DETAIL_DOCTOR: '/detail-doctor/:id',
@@ -13,6 +13,7 @@ export const path = {
     REGISTER: "/register", 
     FORGOT_PASSWORD: "/forgot-password",
     RESET_PASSWORD: "/reset-password",
+    LOGIN_USER: "/login",
 };
 
 export const LANGUAGES = {

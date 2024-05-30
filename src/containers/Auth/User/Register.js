@@ -1,19 +1,21 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
-import { push } from "connected-react-router";
-
-// import * as actions from "../store/actions";
-import * as actions from "../../store/actions";
-
-import "./Login.scss";
-import { FormattedMessage } from "react-intl";
-import { handleLoginApi } from "../../services/userService";
-import { toast } from "react-toastify";
 import { getAuth, signInWithPopup, GoogleAuthProvider } from "firebase/auth";
-import { app, auth, provider } from "../../config/firebase";
-
+import { changeLanguageApp } from "../../../store/actions";
+import { app, auth, provider } from "../../../config/firebase";
+import { LANGUAGES ,USER_ROLE } from "../../../utils";
+import { FormattedMessage } from "react-intl";
+import _ from 'lodash';
+import * as actions from "../../../store/actions";
 // import "./Login.scss";
-class Login extends Component {
+import { toast } from "react-toastify";
+import { withRouter } from 'react-router-dom';
+import {
+  createNewPatient,
+  handleLoginApi
+} from "../../../services/userService";
+import "./Register.scss";
+class Register extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -21,38 +23,82 @@ class Login extends Component {
       password: "",
       isShowPassword: false,
       errMessage: "",
+      confirmPassword: "",
     };
   }
+  componentDidMount(){
+    let {userInfo} = this.props;
+    let menu = [];
+    if (userInfo && !_.isEmpty(userInfo)){
+    let role = userInfo.roleId;
+      if (role === USER_ROLE.ADMIN){
+        // menu = adminMenu;
+      } 
 
+      if (role === USER_ROLE.DOCTOR){
+        // menu = doctorMenu;
+      }
+      if (role === USER_ROLE.PATIENT){
+        menu = [];
+        this.props.history.push("/home");
+      }
+    }
+    this.setState({
+      menuApp: menu
+    })
+  }
   handleOnchangeUsername = (event) => {
     this.setState({ username: event.target.value });
   };
   handleOnchangePassword = (event) => {
     this.setState({ password: event.target.value });
   };
-  handleLogin = async () => {
+
+  handleOnchangeConfirmPassword = (event) => {
+    this.setState({ confirmPassword: event.target.value });
+};
+
+handleRegister = async () => {
     this.setState({
       errMessage: "",
     });
-    try {
-      if (this.state.username === "" || this.state.password === "") {
+
+    // Check if password and confirmPassword are the same
+    if (
+      this.state.password === "" ||
+      this.state.confirmPassword === "" ||
+      this.state.username === ""
+    ) {
+      
+      this.setState({
+        errMessage: "Please fill all fields",
+      });
+      return;
+    }
+    if (this.state.password !== this.state.confirmPassword) {
         this.setState({
-          errMessage: "Please fill all fields",
+            errMessage: "Passwords do not match",
         });
         return;
-      }
-      let data = await handleLoginApi({
+    }
+
+    try {
+      let data = await createNewPatient({
         email: this.state.username,
         password: this.state.password,
       });
+      console.log(data);
       if (data && data.errCode !== 0) {
         this.setState({
           errMessage: data.errMessage,
         });
       }
+      console.log(this.state.errMessage);
       if (data && data.errCode === 0) {
-        this.props.userLoginSuccess(data.user);
-        toast.success("Login success!");
+        toast.success("register success!");
+        setInterval(() => {
+          this.props.history.push("/login");
+        },2000);
       }
     } catch (e) {
       if (e.response) {
@@ -63,12 +109,21 @@ class Login extends Component {
         }
       }
     }
-  };
+};
 
-  signInWithGoogle = async () => {
+  handleShowhidePassword = () => {
     this.setState({
-      errMessage: "",
+      isShowPassword: !this.state.isShowPassword,
     });
+  };
+  handleKeyDown = (event) => {
+    if (event.key === "Enter" || event.keyCode === 13) {
+      this.handleRegister();
+    }
+  };
+  signInWithGoogle = async () => {
+    const auth = getAuth(app);
+    const provider = new GoogleAuthProvider();
     signInWithPopup(auth, provider)
       .then(async (result) => {
         try {
@@ -79,20 +134,37 @@ class Login extends Component {
           const user = result.user;
 
           // Access the user's name
-          let data = await handleLoginApi({
+          let data = await createNewPatient({
             uid: user.uid,
             email: user.email,
+            firstName: user.displayName,
+            image: user.photoURL,
             // accessToken: credential.accessToken,
-          });
+        });
           if (data && data.errCode !== 0) {
             this.setState({
               errMessage: data.errMessage,
             });
+            if (this.state.errMessage === "Your email is already in used. Please try another email") {
+              if (data) {
+                let data = await handleLoginApi({
+                  uid: user.uid,
+                  email: user.email,
+                  // accessToken: credential.accessToken,
+                });
+                this.props.userLoginSuccess(data.user); 
+                this.props.history.push("/home");
+              }          
+            }
           }
-       
+ 
+          console.log(this.state.errMessage);
           if (data && data.errCode === 0) {
-            toast.success("login with google success!");
-            this.props.userLoginSuccess(data.user);
+            toast.success("register with google success!");
+            this.props.userLoginSuccess(data.user); 
+            setInterval(() => {
+              this.props.history.push("/login");
+            },2000);
           }
         } catch (error) {
           console.error(error);
@@ -107,27 +179,12 @@ class Login extends Component {
       });
   };
 
-  handleShowhidePassword = () => {
-    this.setState({
-      isShowPassword: !this.state.isShowPassword,
-    });
-  };
-
-  handleKeyDown = (event) => {
-    if (event.key === "Enter" || event.keyCode === 13) {
-      this.handleLogin();
-    }
-  };
   render() {
-    // const { username, password, loginError } = this.state;
-    // const { lang } = this.props;
-
     return (
-
-      <div className="login-background">
+      <div className="register-background">
         <div className="login-container">
           <div className="login-content row">
-            <div className="col-12 text-login">Login</div>
+            <div className="col-12 text-login">Register</div>
             <div className="col-12 form-group login-input">
               <label>Username:</label>
               <input
@@ -165,6 +222,34 @@ class Login extends Component {
                 </span>
               </div>
             </div>
+            <div className="col-12 form-group login-input">
+              <label>Password Confirm:</label>
+              <div className="custom-input-password">
+                <input
+                  type={this.state.isShowPassword ? "text" : "password"}
+                  className="form-control"
+                  placeholder="Confirm your password"
+                  onChange={(event) => {
+                    this.handleOnchangeConfirmPassword(event);
+                  }}
+                  onKeyDown={(event) => this.handleKeyDown(event)}
+                />
+                <span
+                  onClick={() => {
+                    this.handleShowhidePassword();
+                  }}
+                >
+                  <i
+                    className={
+                      this.state.isShowPassword
+                        ? "far fa-eye"
+                        : "far fa-eye-slash"
+                    }
+                  ></i>
+                </span>
+              </div>
+            </div>
+
             <div className="col-12" style={{ color: "red" }}>
               {this.state.errMessage}
             </div>
@@ -172,16 +257,16 @@ class Login extends Component {
               <button
                 className="btn-login"
                 onClick={() => {
-                  this.handleLogin();
+                  this.handleRegister();
                 }}
               >
-                Login
+                Register
               </button>
             </div>
             <div className="col-12">
               <span className="forgot password">
-                Don't have an account?
-                <a href="/register">Register</a>
+                Do you already have an account?
+                <a href="/login"> Log in</a>
               </span>
             </div>
             <div className="col-12 text-center">
@@ -193,10 +278,7 @@ class Login extends Component {
                 <i className="fab fa-google-plus-g google"></i>
               </span>
 
-                <span onClick={this.signInWithFacebook}>
-                <i className="fab fa-facebook-f facebook"></i>
-
-                </span>
+              {/* <i className="fab fa-facebook-f facebook"></i> */}
             </div>
           </div>
         </div>
@@ -207,17 +289,17 @@ class Login extends Component {
 
 const mapStateToProps = (state) => {
   return {
+    isLoggedIn: state.user.isLoggedIn,
     language: state.app.language,
-  };
+};
 };
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    navigate: (path) => dispatch(push(path)),
-    // userLoginFail: () => dispatch(actions.adminLoginFail()),
+    changeLanguageAppRedux: (language) => dispatch(changeLanguageApp(language)),
     userLoginSuccess: (userInfo) =>
       dispatch(actions.userLoginSuccess(userInfo)),
   };
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(Login);
+export default  withRouter(connect(mapStateToProps, mapDispatchToProps)(Register));

@@ -53,7 +53,7 @@ class ManageSchedule extends Component {
           <div className="text-address">
             <FormattedMessage id="patient.extra-infor-doctor.text-address" />
           </div>
-          <div className="name-clinic">
+          <div className="name-clinic">         
             {extraInfor && extraInfor.nameClinic ? extraInfor.nameClinic : ""}
           </div>
           <div className="detail-address">
@@ -164,6 +164,7 @@ class ManageSchedule extends Component {
 
 const mapStateToProps = (state) => {
   return {
+
     language: state.app.language,
   };
 };

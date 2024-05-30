@@ -66,7 +66,33 @@
                     font-size   : 15px;
                     margin-right: 5px;
                 }
-
+                //user infor dropdown
+                .wrap-user-info {
+                    position: relative;
+                    display: inline-block;
+                  
+                    .dropdown-content {
+                      display: none;
+                      position: absolute;
+                      background-color: #f9f9f9;
+                      min-width: 160px;
+                      box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+                      z-index: 1;
+                  
+                      a {
+                        color: black;
+                        padding: 12px 16px;
+                        text-decoration: none;
+                        display: block;
+                      }
+                  
+                      a:hover {background-color: #f1f1f1}
+                    }
+                  
+                    &:hover .dropdown-content {
+                      display: block;
+                    }
+                  }
                 //login form
 
                 .login-wrapper {
@@ -120,6 +146,25 @@
                             margin-bottom: 0;
                         }
                     }
+                    .custom-input-password {
+                        position: relative;
+    
+                        i {
+                            position: absolute;
+                            right   : 5px;
+                            top     : 10px;
+                        }
+                    }
+                    .center_forgot{
+                        text-align: center;
+                        .Change_link {
+                            padding: 5px 0 auto;
+                        }
+                        .forgot_password {
+                            padding: 5px 0 auto;
+                        }
+                    }
+                   
 
                     .btn-login {
                         color     : #ffF;

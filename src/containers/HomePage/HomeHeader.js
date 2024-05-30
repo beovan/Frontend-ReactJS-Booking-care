@@ -200,8 +200,6 @@ class HomeHeader extends Component {
   render() {
     const { processLogout, language, userInfo, isLoggedIn } = this.props;
 
-    console.log("check statefdsaf", this.state);
-    console.log("check props", this.props);
     return (
       <React.Fragment>
         <div className="home-header-container">
@@ -280,53 +278,57 @@ class HomeHeader extends Component {
                             this.handleOnchangeUsername(event)
                           }
                         />
-                        <input
-                          placeholder="Password"
-                          type={this.state.isShowPassword ? "text" : "password"}
-                          onChange={(event) => {
-                            this.handleOnchangePassword(event);
-                          }}
-                        />
-                        <span
-                          onClick={() => {
-                            this.handleShowhidePassword();
-                          }}
-                        >
-                          <i
-                            className={
-                              this.state.isShowPassword
-                                ? "far fa-eye"
-                                : "far fa-eye-slash"
+                        <div className="custom-input-password">
+                          <input
+                            placeholder="Password"
+                            type={
+                              this.state.isShowPassword ? "text" : "password"
                             }
-                          ></i>
-                        </span>
-                        <div className="col-12">
-                          <span className="forgot password">
+                            onChange={(event) => {
+                              this.handleOnchangePassword(event);
+                            }}
+                          />
+                          <span
+                            onClick={() => {
+                              this.handleShowhidePassword();
+                            }}
+                          >
+                            <i
+                              className={
+                                this.state.isShowPassword
+                                  ? "far fa-eye"
+                                  : "far fa-eye-slash"
+                              }
+                            ></i>
+                          </span>
+                        </div>
+
+                        <div className="col-12 center_forgot">
+                          <span className="Change_link">
                             Don't have an account?
                             <a href="/register">Register</a>
                           </span>
-                          <span>
-                            or
-                          </span>
-                          <span className="forgot password">
+                          <span>or</span>
+                          <span className="forgot_password">
                             <a href="/forgot-password">Forgot password?</a>
                           </span>
+                          <button
+                            className="btn-login"
+                            onClick={() => {
+                              this.handleLogin();
+                            }}
+                          >
+                            Login
+                          </button>
                         </div>
-                        <button
-                          className="btn-login"
-                          onClick={() => {
-                            this.handleLogin();
-                          }}
-                        >
-                          Login
-                        </button>
+
                         <div className="col-12 social-login">
                           <span onClick={this.signInWithGoogle}>
                             {" "}
                             <i className="fab fa-google-plus-g google"></i>
                           </span>
 
-                          <i className="fab fa-facebook-f facebook"></i>
+                          {/* <i className="fab fa-facebook-f facebook"></i> */}
                         </div>
                       </form>
                     </div>
@@ -337,9 +339,16 @@ class HomeHeader extends Component {
                     <span className="welcome">
                       {userInfo && userInfo.firstName ? userInfo.firstName : ""}
                     </span>
-                {/* nút logout */}
-                    <div className="btn btn-logout" onClick={processLogout}>
-                      <i className="fas fa-sign-out-alt"></i>
+
+                    <div className="dropdown-content">
+                      <div className="item">
+                        <a href="/user-profile">Profile</a>
+                      </div>
+                      {/* nút logout */}
+                      <div className="item" onClick={processLogout}>
+                        <a href="#">Logout</a>
+                        {/* <i className="fas fa-sign-out-alt"></i> */}
+                      </div>
                     </div>
                   </div>
                 )}

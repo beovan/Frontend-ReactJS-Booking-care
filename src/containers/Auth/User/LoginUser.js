@@ -14,6 +14,7 @@ import {
   createNewPatient,
   handleLoginApi
 } from "../../../services/userService";
+import "./LoginUser.scss";
 class Register extends Component {
   constructor(props) {
     super(props);
@@ -57,47 +58,40 @@ class Register extends Component {
     this.setState({ confirmPassword: event.target.value });
 };
 
-handleRegister = async () => {
+  handleShowhidePassword = () => {
+    this.setState({
+      isShowPassword: !this.state.isShowPassword,
+    });
+  };
+  handleKeyDown = (event) => {
+    if (event.key === "Enter" || event.keyCode === 13) {
+      this.handleRegister();
+    }
+  };
+
+  handleLogin = async () => {
     this.setState({
       errMessage: "",
     });
-
-    // Check if password and confirmPassword are the same
-    if (
-      this.state.password === "" ||
-      this.state.confirmPassword === "" ||
-      this.state.username === ""
-    ) {
-      
-      this.setState({
-        errMessage: "Please fill all fields",
-      });
-      return;
-    }
-    if (this.state.password !== this.state.confirmPassword) {
+    try {
+      if (this.state.username === "" || this.state.password === "") {
         this.setState({
-            errMessage: "Passwords do not match",
+          errMessage: "Please fill all fields",
         });
         return;
-    }
-
-    try {
-      let data = await createNewPatient({
+      }
+      let data = await handleLoginApi({
         email: this.state.username,
         password: this.state.password,
       });
-      console.log(data);
       if (data && data.errCode !== 0) {
         this.setState({
           errMessage: data.errMessage,
         });
       }
-      console.log(this.state.errMessage);
       if (data && data.errCode === 0) {
-        toast.success("register success!");
-        setInterval(() => {
-          this.props.history.push("/login");
-        },2000);
+        this.props.userLoginSuccess(data.user);
+        toast.success("Login success!");
       }
     } catch (e) {
       if (e.response) {
@@ -107,17 +101,6 @@ handleRegister = async () => {
           });
         }
       }
-    }
-};
-
-  handleShowhidePassword = () => {
-    this.setState({
-      isShowPassword: !this.state.isShowPassword,
-    });
-  };
-  handleKeyDown = (event) => {
-    if (event.key === "Enter" || event.keyCode === 13) {
-      this.handleRegister();
     }
   };
   signInWithGoogle = async () => {
@@ -180,10 +163,10 @@ handleRegister = async () => {
 
   render() {
     return (
-      <div className="login-background">
+      <div className="register-background">
         <div className="login-container">
-          <div className="login-content row">
-            <div className="col-12 text-login">Register</div>
+        <div className="login-content row">
+            <div className="col-12 text-login">Login</div>
             <div className="col-12 form-group login-input">
               <label>Username:</label>
               <input
@@ -221,34 +204,6 @@ handleRegister = async () => {
                 </span>
               </div>
             </div>
-            <div className="col-12 form-group login-input">
-              <label>Password Confirm:</label>
-              <div className="custom-input-password">
-                <input
-                  type={this.state.isShowPassword ? "text" : "password"}
-                  className="form-control"
-                  placeholder="Confirm your password"
-                  onChange={(event) => {
-                    this.handleOnchangeConfirmPassword(event);
-                  }}
-                  onKeyDown={(event) => this.handleKeyDown(event)}
-                />
-                <span
-                  onClick={() => {
-                    this.handleShowhidePassword();
-                  }}
-                >
-                  <i
-                    className={
-                      this.state.isShowPassword
-                        ? "far fa-eye"
-                        : "far fa-eye-slash"
-                    }
-                  ></i>
-                </span>
-              </div>
-            </div>
-
             <div className="col-12" style={{ color: "red" }}>
               {this.state.errMessage}
             </div>
@@ -256,16 +211,16 @@ handleRegister = async () => {
               <button
                 className="btn-login"
                 onClick={() => {
-                  this.handleRegister();
+                  this.handleLogin();
                 }}
               >
-                Register
+                Login
               </button>
             </div>
             <div className="col-12">
               <span className="forgot password">
-                Do you already have an account?
-                <a href="/login"> Log in</a>
+                Don't have an account?
+                <a href="/register">Register</a>
               </span>
             </div>
             <div className="col-12 text-center">
@@ -277,7 +232,10 @@ handleRegister = async () => {
                 <i className="fab fa-google-plus-g google"></i>
               </span>
 
-              <i className="fab fa-facebook-f facebook"></i>
+                {/* <span onClick={this.signInWithFacebook}>
+                <i className="fab fa-facebook-f facebook"></i>
+
+                </span> */}
             </div>
           </div>
         </div>

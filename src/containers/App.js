@@ -10,7 +10,6 @@ import {
 } from "../hoc/authentication";
 import { path } from "../utils";
 import Home from "../routes/Home";
-import Login from "./Auth/Login";
 import System from "../routes/System";
 import { CustomToastCloseButton } from "../components/CustomToast";
 import HomePage from "./HomePage/HomePage.js";
@@ -21,9 +20,13 @@ import VerifyEmail from "./Patient/VerifyEmail";
 import DetailSpecialty from "./Patient/Specialty/DetailSpecialty";
 import DetailClinic from "./Patient/Clinic/DetailClinic"
 import SearchResult from "./HomePage/Search/SearchResult";
-import Register from "./HomePage/Register/Register.js";
-import ForgotPassword from "./Auth/ForgotPassword.js";
-import ResetPassword from "./Auth/ResetPassword.js";
+//admin 
+import Login from "./Auth/Admin/Login.js";
+//user
+import Register from "./Auth/User/Register.js";
+import ForgotPassword from "./Auth/User/ForgotPassword.js";
+import ResetPassword from "./Auth/User/ResetPassword.js";
+import LoginUser from "./Auth/User/LoginUser.js";
 class App extends Component {
   handlePersistorState = () => {
     const { persistor } = this.props;
@@ -61,18 +64,18 @@ class App extends Component {
                     component={userIsAuthenticated(System)}
                   />
                   <Route path="/doctor/" component={userIsAuthenticated(Doctor)}/>
-                  
+                    {/* Doctor */}
                   <Route path={path.HOMEPAGE} component={HomePage} />
                   <Route path={path.DETAIL_DOCTOR} component={DetailDoctor} />
                   <Route path={path.DETAIL_SPECIALTY} component={DetailSpecialty} />
                   <Route path={path.DETAIL_CLINIC} component={DetailClinic}/>
-                  
+                  {/* User or patient */}
                   <Route path={path.VERIFY_EMAIL_BOOKING} component={VerifyEmail} />
                   <Route path={path.SEARCH_RESULT} component={SearchResult}/>
                   <Route path={path.REGISTER} component={Register}/>
                   <Route path={path.FORGOT_PASSWORD} component={ForgotPassword}/>
                   <Route path={path.RESET_PASSWORD} component={ResetPassword}/>
-
+                  <Route path={path.LOGIN_USER} component={LoginUser}/>
                 </Switch>
               </CustomScrollbars>
             </span>

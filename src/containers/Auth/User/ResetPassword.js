@@ -1,8 +1,8 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
-import { changeLanguageApp } from "../../store/actions";
+import { changeLanguageApp } from "../../../store/actions";
 import "./ResetPassword.scss";
-import { handleResetPassword } from "../../services/userService";  
+import { handleResetPassword } from "../../../services/userService";  
 import { withRouter } from 'react-router-dom';
 
 class ResetPassword extends Component {

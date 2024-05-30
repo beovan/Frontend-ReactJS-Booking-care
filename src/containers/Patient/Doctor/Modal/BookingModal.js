@@ -166,6 +166,8 @@ class BookingModal extends Component {
     if (dataTime && !_.isEmpty(dataTime)) {
       doctorId = dataTime.doctorId;
     }
+    let userInfor = this.props.userInfo;
+    console.log("userInfor", userInfor);
     return (
       <LoadingOverlay
         active={this.state.isShowLoading}
@@ -203,11 +205,13 @@ class BookingModal extends Component {
                     <FormattedMessage id="patient.booking-modal.fullName" />
                   </label>
                   <input
-                    value={this.state.fullName}
+                    disabled={userInfor && userInfor.firstName ? "disabled" : ""}
+                    value={userInfor ? userInfor.firstName : this.state.fullName}
                     onChange={(event) =>
                       this.handleOnChangeInput(event, "fullName")
                     }
                     className="form-control"
+
                   />
                 </div>
                 <div className="col-6 form-group">
@@ -227,10 +231,12 @@ class BookingModal extends Component {
                     <FormattedMessage id="patient.booking-modal.email" />
                   </label>
                   <input
-                    value={this.state.email}
+                    value={userInfor ? userInfor.email : this.state.email}
+                    disabled={userInfor && userInfor.email ? "disabled" : ""}
                     onChange={(event) =>
                       this.handleOnChangeInput(event, "email")
                     }
+
                     className="form-control"
                   />
                 </div>
@@ -303,6 +309,8 @@ class BookingModal extends Component {
 
 const mapSatetoProps = (state) => {
   return {
+    isLoggedIn: state.user.isLoggedIn,
+    userInfo: state.user.userInfo,
     language: state.app.language,
     genders: state.admin.genders,
   };

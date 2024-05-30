@@ -28,7 +28,7 @@ class MedicalFacility extends Component {
   }
     render() {
       let {dataClinics} = this.state;
-      console.log('dataClinics', dataClinics);
+      // console.log('dataClinics', dataClinics);
         return (
             <div className="section-share section-medical-facility">
             <div className="section-container">

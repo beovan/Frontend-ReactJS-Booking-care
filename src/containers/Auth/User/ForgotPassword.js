@@ -1,8 +1,8 @@
 import React, { Component, Fragment, useState } from "react";
 import { connect } from "react-redux";
-import { changeLanguageApp } from "../../store/actions";
+import { changeLanguageApp } from "../../../store/actions";
 import "./ForgotPassword.scss";
-import { handleForgotPassword } from "../../services/userService";
+import { handleForgotPassword } from "../../../services/userService";
 
 class ForgotPassword extends Component {
   constructor(props) {
