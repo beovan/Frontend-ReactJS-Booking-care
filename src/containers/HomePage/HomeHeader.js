@@ -9,7 +9,7 @@ import { withRouter } from "react-router";
 import { changeLanguageApp } from "../../store/actions";
 import * as actions from "../../store/actions";
 import Select from "react-select";
-import { handleLoginApi } from "../../services/userService";
+import { createNewPatient, handleLoginApi } from "../../services/userService";
 import { toast } from "react-toastify";
 import { getAuth, signInWithPopup, GoogleAuthProvider } from "firebase/auth";
 import { app, auth, provider } from "../../config/firebase";
@@ -160,26 +160,43 @@ class HomeHeader extends Component {
           const user = result.user;
 
           // Access the user's name
-          let data = await handleLoginApi({
+          let data = await createNewPatient({
             uid: user.uid,
             email: user.email,
+            firstName: user.displayName,
+            image: user.photoURL,
             // accessToken: credential.accessToken,
           });
           if (data && data.errCode !== 0) {
             this.setState({
               errMessage: data.errMessage,
             });
+            if (
+              this.state.errMessage ===
+              "Your email is already in used. Please try another email"
+            ) {
+              if (data) {
+                let data = await handleLoginApi({
+                  uid: user.uid,
+                  email: user.email,
+                  // accessToken: credential.accessToken,
+                });
+                this.props.userLoginSuccess(data ? data.user : null);
+                this.props.history.push("/home");
+              }
+            }
           }
+
           console.log(this.state.errMessage);
           if (data && data.errCode === 0) {
-            toast.success("login with google success!");
-            this.props.userLoginSuccess(data.user);
+            toast.success("Login with google success!");
+            this.props.userLoginSuccess(data ? data.user : null);
             setInterval(() => {
-              this.props.history.push("/home");
+              this.props.history.push("/login");
             }, 2000);
           }
         } catch (error) {
-          console.error(error);
+          console.log("error");
         }
       })
       .catch((error) => {

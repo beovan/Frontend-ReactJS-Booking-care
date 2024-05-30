@@ -3,16 +3,16 @@ import { connect } from "react-redux";
 import { getAuth, signInWithPopup, GoogleAuthProvider } from "firebase/auth";
 import { changeLanguageApp } from "../../../store/actions";
 import { app, auth, provider } from "../../../config/firebase";
-import { LANGUAGES ,USER_ROLE } from "../../../utils";
+import { LANGUAGES, USER_ROLE } from "../../../utils";
 import { FormattedMessage } from "react-intl";
-import _ from 'lodash';
+import _ from "lodash";
 import * as actions from "../../../store/actions";
 // import "./Login.scss";
 import { toast } from "react-toastify";
-import { withRouter } from 'react-router-dom';
+import { withRouter } from "react-router-dom";
 import {
   createNewPatient,
-  handleLoginApi
+  handleLoginApi,
 } from "../../../services/userService";
 import "./LoginUser.scss";
 class Register extends Component {
@@ -26,26 +26,26 @@ class Register extends Component {
       confirmPassword: "",
     };
   }
-  componentDidMount(){
-    let {userInfo} = this.props;
+  componentDidMount() {
+    let { userInfo } = this.props;
     let menu = [];
-    if (userInfo && !_.isEmpty(userInfo)){
-    let role = userInfo.roleId;
-      if (role === USER_ROLE.ADMIN){
+    if (userInfo && !_.isEmpty(userInfo)) {
+      let role = userInfo.roleId;
+      if (role === USER_ROLE.ADMIN) {
         // menu = adminMenu;
-      } 
+      }
 
-      if (role === USER_ROLE.DOCTOR){
+      if (role === USER_ROLE.DOCTOR) {
         // menu = doctorMenu;
       }
-      if (role === USER_ROLE.PATIENT){
+      if (role === USER_ROLE.PATIENT) {
         menu = [];
         this.props.history.push("/home");
       }
     }
     this.setState({
-      menuApp: menu
-    })
+      menuApp: menu,
+    });
   }
   handleOnchangeUsername = (event) => {
     this.setState({ username: event.target.value });
@@ -56,7 +56,7 @@ class Register extends Component {
 
   handleOnchangeConfirmPassword = (event) => {
     this.setState({ confirmPassword: event.target.value });
-};
+  };
 
   handleShowhidePassword = () => {
     this.setState({
@@ -76,7 +76,7 @@ class Register extends Component {
     try {
       if (this.state.username === "" || this.state.password === "") {
         this.setState({
-          errMessage: "Please fill all fields",
+          errMessage: "Please fill all fields ",
         });
         return;
       }
@@ -122,34 +122,38 @@ class Register extends Component {
             firstName: user.displayName,
             image: user.photoURL,
             // accessToken: credential.accessToken,
-        });
+          });
+          console.log(data);
           if (data && data.errCode !== 0) {
             this.setState({
               errMessage: data.errMessage,
             });
-            if (this.state.errMessage === "Your email is already in used. Please try another email") {
+            if (
+              this.state.errMessage ===
+              "Your email is already in used. Please try another email"
+            ) {
               if (data) {
                 let data = await handleLoginApi({
                   uid: user.uid,
                   email: user.email,
                   // accessToken: credential.accessToken,
                 });
-                this.props.userLoginSuccess(data.user); 
+                this.props.userLoginSuccess(data.user);
                 this.props.history.push("/home");
-              }          
+              }
             }
           }
- 
+
           console.log(this.state.errMessage);
           if (data && data.errCode === 0) {
-            toast.success("register with google success!");
-            this.props.userLoginSuccess(data.user); 
+            toast.success("Login with google success!");
+            this.props.userLoginSuccess(data.user);
             setInterval(() => {
-              this.props.history.push("/login");
-            },2000);
+              this.props.history.push("/home");
+            }, 2000);
           }
         } catch (error) {
-          console.error(error);
+          console.log("error");
         }
       })
       .catch((error) => {
@@ -165,7 +169,7 @@ class Register extends Component {
     return (
       <div className="register-background">
         <div className="login-container">
-        <div className="login-content row">
+          <div className="login-content row">
             <div className="col-12 text-login">Login</div>
             <div className="col-12 form-group login-input">
               <label>Username:</label>
@@ -232,7 +236,7 @@ class Register extends Component {
                 <i className="fab fa-google-plus-g google"></i>
               </span>
 
-                {/* <span onClick={this.signInWithFacebook}>
+              {/* <span onClick={this.signInWithFacebook}>
                 <i className="fab fa-facebook-f facebook"></i>
 
                 </span> */}
@@ -248,7 +252,7 @@ const mapStateToProps = (state) => {
   return {
     isLoggedIn: state.user.isLoggedIn,
     language: state.app.language,
-};
+  };
 };
 
 const mapDispatchToProps = (dispatch) => {
@@ -259,4 +263,6 @@ const mapDispatchToProps = (dispatch) => {
   };
 };
 
-export default  withRouter(connect(mapStateToProps, mapDispatchToProps)(Register));
+export default withRouter(
+  connect(mapStateToProps, mapDispatchToProps)(Register)
+);

@@ -163,7 +163,7 @@ handleRegister = async () => {
             toast.success("register with google success!");
             this.props.userLoginSuccess(data.user); 
             setInterval(() => {
-              this.props.history.push("/login");
+              this.props.history.push("/home");
             },2000);
           }
         } catch (error) {
