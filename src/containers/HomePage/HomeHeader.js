@@ -359,7 +359,7 @@ class HomeHeader extends Component {
 
                     <div className="dropdown-content">
                       <div className="item">
-                        <a href="/user-profile">Profile</a>
+                        <a href="/profile">Profile</a>
                       </div>
                       {/* nút logout */}
                       <div className="item" onClick={processLogout}>

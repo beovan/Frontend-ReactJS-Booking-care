@@ -27,6 +27,7 @@ import Register from "./Auth/User/Register.js";
 import ForgotPassword from "./Auth/User/ForgotPassword.js";
 import ResetPassword from "./Auth/User/ResetPassword.js";
 import LoginUser from "./Auth/User/LoginUser.js";
+import Profile from "./HomePage/Profile/Profile.js";
 class App extends Component {
   handlePersistorState = () => {
     const { persistor } = this.props;
@@ -76,6 +77,7 @@ class App extends Component {
                   <Route path={path.FORGOT_PASSWORD} component={ForgotPassword}/>
                   <Route path={path.RESET_PASSWORD} component={ResetPassword}/>
                   <Route path={path.LOGIN_USER} component={LoginUser}/>
+                  <Route path={path.PROFILE} component={Profile}/>
                 </Switch>
               </CustomScrollbars>
             </span>
