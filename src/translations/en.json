@@ -22,7 +22,7 @@
         "child5": "Mental health",
         "child6": "Dental examination"
     },
-    "menu": {
+    "menu": {                  
         "admin": {
             "manage-user": "Users System",
             "manage-doctor": "Manage doctors",
