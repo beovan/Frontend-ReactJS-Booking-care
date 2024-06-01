@@ -26,27 +26,27 @@ class Register extends Component {
       confirmPassword: "",
     };
   }
-  componentDidMount(){
-    let {userInfo} = this.props;
-    let menu = [];
-    if (userInfo && !_.isEmpty(userInfo)){
-    let role = userInfo.roleId;
-      if (role === USER_ROLE.ADMIN){
-        // menu = adminMenu;
-      } 
+  // componentDidMount(){
+  //   let {userInfo} = this.props;
+  //   let menu = [];
+  //   if (userInfo && !_.isEmpty(userInfo)){
+  //   let role = userInfo.roleId;
+  //     if (role === USER_ROLE.ADMIN){
+  //       // menu = adminMenu;
+  //     } 
 
-      if (role === USER_ROLE.DOCTOR){
-        // menu = doctorMenu;
-      }
-      if (role === USER_ROLE.PATIENT){
-        menu = [];
-        this.props.history.push("/home");
-      }
-    }
-    this.setState({
-      menuApp: menu
-    })
-  }
+  //     if (role === USER_ROLE.DOCTOR){
+  //       // menu = doctorMenu;
+  //     }
+  //     if (role === USER_ROLE.PATIENT){
+  //       menu = [];
+  //       this.props.history.push("/home");
+  //     }
+  //   }
+  //   this.setState({
+  //     menuApp: menu
+  //   })
+  // }
   handleOnchangeUsername = (event) => {
     this.setState({ username: event.target.value });
   };

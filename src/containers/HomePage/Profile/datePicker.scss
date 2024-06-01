@@ -1,0 +1,83 @@
+.rdtPicker{
+    .dow {
+      height: 1.5rem;
+      line-height: 1.5rem;
+      font-size: 20px;
+      font-weight: 600;
+    }
+    td{
+      height: 35px !important;
+      &.rdtActive{
+        background-color: red !important;
+        color: darkblue !important;
+        border-radius: 50% ;
+        text-shadow: none !important;
+      }
+      &.rdtDay{
+        &:hover{
+          border-radius: 50% ;
+        }
+      }
+      &.rdtToday{
+        background-color: lightblue;
+        border-radius: 50%;
+        &::before{
+          border-bottom: 7px solid red;
+        }
+      }
+    }
+    th{
+      border-bottom:0 !important;
+    }
+  }
+  
+  .input-group {
+    border-radius: 50%;
+    transition   : 2s;
+
+    .form-control {
+        box-shadow: none;
+
+        &:not(:first-child) {
+            border-left : 0;
+            padding-left: 0;
+        }
+
+        &:not(:last-child) {
+            border-right : 0;
+            padding-right: 0;
+        }
+
+        &:focus {
+            box-shadow: none;
+        }
+    }
+}
+
+.input-group-text {
+    font-size   : 20px;
+    transition  : 2s;
+    border-right: 0;
+}
+
+
+
+.input-group-prepend {
+    margin-right: -2px;
+}
+
+// .focus class is applied dinamycally from theme.js
+
+.focused {
+
+    .input-group-text {
+        color           : red;
+        background-color: white;
+    }
+
+    .input-group-shadow {
+        box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+    }
+}
+
+  
