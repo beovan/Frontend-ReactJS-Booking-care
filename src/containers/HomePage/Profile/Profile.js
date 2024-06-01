@@ -46,30 +46,14 @@ class Profile extends Component {
       userInfo: userInfo,
     });
   }
-
-  // componentDidwUpdate(prevProps, prevState, snapshot) {
-  //   // if (prevProps.allDoctors !== this.props.allDoctors) {
-  //   //   let dataSelect = this.buildDataInputSelect(
-  //   //     this.props.allDoctors,
-  //   //     "USERS"
-  //   //   );
-  //   //   this.setState({
-  //   //     listDoctors: dataSelect,
-  //   //   });
-  //   // }
-  //   let { userInfo } = this.props;
-  //   let menu = [];
-  //   if (userInfo && !_.isEmpty(userInfo)) {
-  //     let role = userInfo.roleId;
-  //     if (role === USER_ROLE.PATIENT) {
-  //       // menu = adminMenu;
-  //     }
-
-  //     if (role === USER_ROLE.DOCTOR) {
-  //       // menu = doctorMenu;
-  //     }
-  //   }
-  // }
+  
+  componentDidUpdate(prevProps) {
+    if (this.props.userInfo !== prevProps.userInfo) {
+      this.setState({
+        userInfo: this.props.userInfo,
+      });
+    }
+  }
   render() {
     let { userInfo } = this.state;
 
