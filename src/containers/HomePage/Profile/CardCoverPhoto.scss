@@ -1,0 +1,225 @@
+/**
+ * = Cards
+ */
+@import "./mixins";
+ .card {
+    position: relative;
+    .card-header{
+        background: transparent;
+    }
+
+    &.hover-state{
+        &:hover {
+            background-color: red;
+        }
+    }
+
+    .profile-cover{
+        background-image: (no-repeat, cover); 
+        height: 200px;
+    }
+
+    .card {
+        @include timeline-card;
+      }
+}
+
+.message-wrapper,
+.task-wrapper{
+    .card{
+        border:0;
+    }
+}
+
+.customer-testimonial {
+    .content-wrapper{
+        &:before {
+            content: "";
+            position: absolute;
+            top: 25px;
+            left: -1px;
+            margin-left: .75rem;
+            border: 8px solid black;
+            border-color: transparent #e0e6ec #e0e6ec transparent;
+            -webkit-box-sizing: border-box;
+            box-sizing: border-box;
+            -webkit-transform-origin: 0 0;
+            transform-origin: 0 0;
+            transform: (rotate(135deg));
+             box-shadow: (rgb(52, 52, 52) 0 0 0 1px);
+        }
+    }
+}
+
+.profile-page {
+    .card-profile {
+        margin-top: -150px;
+
+        .card-profile-image {
+            position: relative;
+
+            img {
+                max-width: 180px;
+                border-radius: (50%);
+                transform: translate(-50%,-30%);
+                position: absolute;
+                left: 50%;
+                transition: 0.5s;
+
+                &:hover {
+                    transform: translate(-50%, -33%);
+                }
+            }
+        }
+
+        .card-profile-stats {
+            padding: 1rem 0;
+
+            > div {
+                text-align: center;
+                margin-right: 1rem;
+                padding: .875rem;
+
+                &:last-child {
+                    margin-right: 0;
+                }
+
+                .heading {
+                    display: block;
+                    font-size: 1.1rem;
+                    font-weight: bold;
+                }
+                .description {
+                    font-size: .875rem;
+                    color: gray;
+                }
+            }
+        }
+
+        .card-profile-actions {
+            padding: .875rem;
+        }
+
+        //     .card-profile-actions {
+        //         margin-top: 110px;
+        // }
+
+        //     .card-profile-stats {
+        //         margin-top: 30px;
+        //     }
+    }
+}
+
+.card-footer{
+    background-color:transparent;
+}
+
+.card-stats{
+    padding-left:1.9rem;
+}
+
+
+// Card with blockquotes
+
+.card {
+    .card-blockquote {
+        position: relative;
+        padding: 2rem;
+
+        .svg-bg {
+            display: block;
+            position: absolute;
+            width: 100%;
+            height: 95px;
+            top: -94px;
+            left: 0;
+        }
+    }
+}
+
+// Animated cards
+
+.card-lift-hover {
+    &:hover {
+        transform: translateY(-20px);
+        transition: (0.5s);
+    }
+}
+
+.page-preview {
+
+    display: block;
+    position: relative;
+
+    .show-on-hover {
+        position: absolute;
+        bottom: -25px;
+        background: rgba(rgb(87, 86, 86), .85);
+        padding: 10px 0;
+        border-bottom-left-radius: 50%;
+        border-bottom-right-radius: 50%;    
+        width: calc(100% + 28px);
+        left: -14px;
+        opacity: 0;
+        transition: (.2s);
+    }
+
+    &.page-preview-lg {
+        .show-on-hover {
+            left: -30px;
+            width: calc(100% + 60px);
+            bottom: -20px;
+        }
+    }
+
+    &:hover {
+        .show-on-hover {
+            z-index: 99;
+            opacity: 1;
+        }
+    }
+}
+
+.live-editor {
+    textarea, pre {
+        font-size: 1.2em !important;
+        padding: 0 !important;
+    }
+
+    textarea:focus {
+       outline: none !important;
+    }
+}
+
+.prism-code {
+    padding: 0 !important;
+}
+
+.theme-settings {
+    z-index: 99;
+    position: fixed;
+    right: 15px;
+    bottom: 0;
+    
+    &, .card-body {
+        border-bottom-right-radius: 0;
+        border-bottom-left-radius: 0;
+    }
+}
+
+.theme-settings-close {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    font-size: .65rem;
+}
+
+.theme-settings-expand {
+    right: 15px;
+    bottom: 0;
+
+    &:hover {
+        background: gray;
+        cursor: pointer;
+    }
+}

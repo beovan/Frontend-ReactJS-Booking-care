@@ -16,14 +16,19 @@ import {
   Button,
   InputGroup,
 } from "@themesberg/react-bootstrap";
-import './datePicker.scss';
+import "./datePicker.scss";
 import "./react-dateTime.css";
+import "./CardCoverPhoto.scss";
+import ProfileCover from "../../../assets/images/profile-cover.jpg";
+import { LANGUAGES, USER_ROLE } from "../../../utils";
+import _ from "lodash";
 class Profile extends Component {
   constructor(props) {
     super(props);
     this.state = {
       tabChange: "profile",
       birthday: "",
+      userInfo: {},
     };
   }
 
@@ -34,7 +39,40 @@ class Profile extends Component {
   setBirthday = (birthday) => {
     this.setState({ birthday });
   };
+
+  componentDidMount() {
+    let { userInfo } = this.props;
+    this.setState({
+      userInfo: userInfo,
+    });
+  }
+
+  // componentDidwUpdate(prevProps, prevState, snapshot) {
+  //   // if (prevProps.allDoctors !== this.props.allDoctors) {
+  //   //   let dataSelect = this.buildDataInputSelect(
+  //   //     this.props.allDoctors,
+  //   //     "USERS"
+  //   //   );
+  //   //   this.setState({
+  //   //     listDoctors: dataSelect,
+  //   //   });
+  //   // }
+  //   let { userInfo } = this.props;
+  //   let menu = [];
+  //   if (userInfo && !_.isEmpty(userInfo)) {
+  //     let role = userInfo.roleId;
+  //     if (role === USER_ROLE.PATIENT) {
+  //       // menu = adminMenu;
+  //     }
+
+  //     if (role === USER_ROLE.DOCTOR) {
+  //       // menu = doctorMenu;
+  //     }
+  //   }
+  // }
   render() {
+    let { userInfo } = this.state;
+
     return (
       <div className="detail-specialty-container">
         <HomeHeader />
@@ -44,17 +82,51 @@ class Profile extends Component {
             <div className="each-doctor">
               <div className="dt-content-left">
                 <div className="profile-doctor">
-                  <Tabs
-                    defaultActiveKey="profile"
-                    id="uncontrolled-tab-example"
-                    onSelect={this.handleSelect}
-                  >
-                    <Tab eventKey="profile" title="Profile" />
-                    <Tab eventKey="bookings" title="Bookings" />
-                  </Tabs>
+                  <Card border="light" className="text-center p-0 mb-4">
+                    <div
+                      style={{ backgroundImage: `url(${ProfileCover})` }}
+                      className="profile-cover rounded-top"
+                    />
+                    <Card.Body className="pb-5">
+                      {userInfo && !_.isEmpty(userInfo) && userInfo.image ? (
+                        <>
+                          <Card.Img
+                            style={{ width: "50px", height: "50px" }}
+                            src={userInfo.image}
+                            alt="Thông tin người dùng"
+                            className="user-avatar large-avatar rounded-circle mx-auto mt-n7 mb-4"
+                          />
+                          <Card.Title>{userInfo.firstName}</Card.Title>
+                        </>
+                      ) : null}
+
+                      {/* <Card.Subtitle className="fw-normal">
+                        Senior Software Engineer
+                      </Card.Subtitle>
+                      <Card.Text className="text-gray mb-4">
+                        New York, USA
+                      </Card.Text> */}
+
+                      {/* <Button variant="primary" size="sm" className="me-2">
+                        <FontAwesomeIcon icon={} className="me-1" />{" "}
+                        Connect
+                      </Button>
+                      <Button variant="secondary" size="sm">
+                        Send Message
+                      </Button> */}
+                    </Card.Body>
+                  </Card>
                 </div>
               </div>
               <div className="dt-content-right">
+                <Tabs
+                  defaultActiveKey="profile"
+                  id="uncontrolled-tab-example"
+                  onSelect={this.handleSelect}
+                >
+                  <Tab eventKey="profile" title="Profile" />
+                  <Tab eventKey="bookings" title="Bookings" />
+                </Tabs>
                 {this.state.tabChange === "profile" && (
                   <div className="doctor-schedule">
                     <Card border="light" className="bg-white shadow-sm mb-4">
@@ -66,7 +138,9 @@ class Profile extends Component {
                               <Form.Group id="firstName">
                                 <Form.Label>First Name</Form.Label>
                                 <Form.Control
-                                  required
+                                  // value={
+                                  //   userInfo ? userInfo.firstName : ""
+                                  // }
                                   type="text"
                                   placeholder="Enter your first name"
                                 />
@@ -76,7 +150,9 @@ class Profile extends Component {
                               <Form.Group id="lastName">
                                 <Form.Label>Last Name</Form.Label>
                                 <Form.Control
-                                  required
+                                  // value={
+                                  //   userInfo.lastName ? userInfo.lastName : ""
+                                  // }
                                   type="text"
                                   placeholder="Also your last name"
                                 />
@@ -96,7 +172,6 @@ class Profile extends Component {
                                         <FontAwesomeIcon icon={faCalendarAlt} />
                                       </InputGroup.Text>
                                       <Form.Control
-                                        required
                                         type="text"
                                         value={
                                           this.state.birthday
@@ -131,7 +206,6 @@ class Profile extends Component {
                               <Form.Group id="emal">
                                 <Form.Label>Email</Form.Label>
                                 <Form.Control
-                                  required
                                   type="email"
                                   placeholder="Enter your email address"
                                 />
@@ -139,9 +213,8 @@ class Profile extends Component {
                             </Col>
                             <Col md={6} className="mb-3">
                               <Form.Group id="phone">
-                                <Form.Label>Phone</Form.Label>
+                                <Form.Label>Phone number</Form.Label>
                                 <Form.Control
-                                  required
                                   type="number"
                                   placeholder="+12-345 678 910"
                                 />
@@ -155,7 +228,6 @@ class Profile extends Component {
                               <Form.Group id="address">
                                 <Form.Label>Address</Form.Label>
                                 <Form.Control
-                                  required
                                   type="text"
                                   placeholder="Enter your home address"
                                 />
@@ -187,6 +259,7 @@ class Profile extends Component {
 const mapStateToProps = (state) => {
   return {
     isLoggedIn: state.user.isLoggedIn,
+    userInfo: state.user.userInfo,
     language: state.app.language,
   };
 };

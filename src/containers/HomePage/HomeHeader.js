@@ -14,6 +14,7 @@ import { toast } from "react-toastify";
 import { getAuth, signInWithPopup, GoogleAuthProvider } from "firebase/auth";
 import { app, auth, provider } from "../../config/firebase";
 import _ from "lodash";
+import Profile from "./Profile/Profile";
 class HomeHeader extends Component {
   constructor(props) {
     super(props);
@@ -216,7 +217,6 @@ class HomeHeader extends Component {
 
   render() {
     const { processLogout, language, userInfo, isLoggedIn } = this.props;
-
     return (
       <React.Fragment>
         <div className="home-header-container">

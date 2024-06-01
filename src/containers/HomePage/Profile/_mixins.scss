@@ -1,0 +1,17 @@
+@mixin timeline-card {
+    &:before {
+      content: "";
+      position: absolute;
+      top: 50%;
+      left: 0;
+      margin-left: .75rem;
+      border: 8px solid black;
+      border-color: transparent #e0e6ec #e0e6ec transparent;
+      -webkit-box-sizing: border-box;
+      box-sizing: border-box;
+      -webkit-transform-origin: 0 0;
+      transform-origin: 0 0;
+      transform: (rotate(135deg));
+    box-shadow:(rgb(52, 52, 52) 0 0 0 1px);
+    }
+  }
