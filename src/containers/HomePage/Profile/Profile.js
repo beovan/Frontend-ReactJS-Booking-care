@@ -4,8 +4,9 @@ import { connect } from "react-redux";
 import HomeHeader from "../../HomePage/HomeHeader";
 import "./Profile.scss";
 import { Tabs, Tab } from "react-bootstrap";
-import moment from "moment-timezone";
+import moment from "moment";
 import Datetime from "react-datetime";
+import "moment/locale/vi";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCalendarAlt } from "@fortawesome/free-solid-svg-icons";
 import {
@@ -45,8 +46,9 @@ class Profile extends Component {
     this.setState({
       userInfo: userInfo,
     });
+    moment.locale("vi");
   }
-  
+
   componentDidUpdate(prevProps) {
     if (this.props.userInfo !== prevProps.userInfo) {
       this.setState({
@@ -56,7 +58,6 @@ class Profile extends Component {
   }
   render() {
     let { userInfo } = this.state;
-
     return (
       <div className="detail-specialty-container">
         <HomeHeader />
@@ -148,6 +149,7 @@ class Profile extends Component {
                               <Form.Group id="birthday">
                                 <Form.Label>Birthday</Form.Label>
                                 <Datetime
+                                  locale="vi" // Set the locale directly on the Datetime component
                                   timeFormat={false}
                                   onChange={(date) => this.setBirthday(date)}
                                   renderInput={(props, openCalendar) => (

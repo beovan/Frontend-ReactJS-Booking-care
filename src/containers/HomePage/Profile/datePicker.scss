@@ -8,7 +8,7 @@
     td{
       height: 35px !important;
       &.rdtActive{
-        background-color: red !important;
+        background-color: lightblue !important;
         color: darkblue !important;
         border-radius: 50% ;
         text-shadow: none !important;
@@ -22,7 +22,7 @@
         background-color: lightblue;
         border-radius: 50%;
         &::before{
-          border-bottom: 7px solid red;
+          border-bottom: 7px solid lightblue;
         }
       }
     }
@@ -71,7 +71,7 @@
 .focused {
 
     .input-group-text {
-        color           : red;
+        color           : lightblue;
         background-color: white;
     }
 
