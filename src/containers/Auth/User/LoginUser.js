@@ -65,7 +65,7 @@ class Register extends Component {
   };
   handleKeyDown = (event) => {
     if (event.key === "Enter" || event.keyCode === 13) {
-      this.handleRegister();
+      this.handleLogin();
     }
   };
 
@@ -92,6 +92,9 @@ class Register extends Component {
       if (data && data.errCode === 0) {
         this.props.userLoginSuccess(data.user);
         toast.success("Login success!");
+        setInterval(() => {
+          this.props.history.push("/home");
+        }, 2000);
       }
     } catch (e) {
       if (e.response) {

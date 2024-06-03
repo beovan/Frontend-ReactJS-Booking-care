@@ -37,6 +37,7 @@ class ManagePatient extends Component {
       doctorId: user.id,
       date: formatedDate,
     });
+    console.log(res.data);
     if (res && res.errCode === 0) {
       this.setState({
         dataPatient: res.data,
@@ -143,14 +144,17 @@ class ManagePatient extends Component {
                     </tr>
                     {dataPatient && dataPatient.length > 0 ? (
                       dataPatient.map((item, index) => {
+                        
                         let time =
-                          language === LANGUAGES.VI
-                            ? item.timeTypeDataPatient.valueVi
-                            : item.timeTypeDataPatient.valueEn;
-                        let gender =
-                          language === LANGUAGES.VI
-                            ? item.patientData.genderData.valueVi
-                            : item.patientData.genderData.valueEn;
+                        language === LANGUAGES.VI
+                          ? item.timeTypeDataPatient.valueVi
+                          : item.timeTypeDataPatient.valueEn;
+                      let gender =
+                        item.patientData.genderData && language === LANGUAGES.VI
+                          ? item.patientData.genderData.valueVi
+                          : item.patientData.genderData
+                          ? item.patientData.genderData.valueEn
+                          : null;
                         return (
                           <tr key={index}>
                             <td>{index + 1}</td>

@@ -205,13 +205,11 @@ class BookingModal extends Component {
                     <FormattedMessage id="patient.booking-modal.fullName" />
                   </label>
                   <input
-                    disabled={userInfor && userInfor.firstName ? "disabled" : ""}
-                    value={userInfor ? userInfor.firstName : this.state.fullName}
+                    defaultValue={userInfor ? userInfor.firstName : ''}
                     onChange={(event) =>
-                      this.handleOnChangeInput(event, "fullName")
+                      this.handleOnChangeInput(event , "fullName")
                     }
                     className="form-control"
-
                   />
                 </div>
                 <div className="col-6 form-group">
@@ -231,12 +229,10 @@ class BookingModal extends Component {
                     <FormattedMessage id="patient.booking-modal.email" />
                   </label>
                   <input
-                    value={userInfor ? userInfor.email : this.state.email}
-                    disabled={userInfor && userInfor.email ? "disabled" : ""}
+                  defaultValue={userInfor ? userInfor.email : ''}
                     onChange={(event) =>
                       this.handleOnChangeInput(event, "email")
                     }
-
                     className="form-control"
                   />
                 </div>

@@ -85,20 +85,7 @@ class Profile extends Component {
                         </>
                       ) : null}
 
-                      {/* <Card.Subtitle className="fw-normal">
-                        Senior Software Engineer
-                      </Card.Subtitle>
-                      <Card.Text className="text-gray mb-4">
-                        New York, USA
-                      </Card.Text> */}
-
-                      {/* <Button variant="primary" size="sm" className="me-2">
-                        <FontAwesomeIcon icon={} className="me-1" />{" "}
-                        Connect
-                      </Button>
-                      <Button variant="secondary" size="sm">
-                        Send Message
-                      </Button> */}
+                    
                     </Card.Body>
                   </Card>
                 </div>
