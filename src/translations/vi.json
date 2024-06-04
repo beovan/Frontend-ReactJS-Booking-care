@@ -93,7 +93,8 @@
             "btnConfirm": "Xác nhận",
             "btnCancel": "Hủy",
             "priceBooking": "Miễn phí đặt lịch",
-            "price": "Giá khám: "
+            "price": "Giá khám: ",
+            "loginRequire": "Vui lòng đăng nhập để đặt lịch khám"
         }
     },
     "admin": {

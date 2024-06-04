@@ -93,7 +93,8 @@
             "btnConfirm": "Confirm",
             "btnCancel": "Cancel",
             "priceBooking": "Free booking",
-            "price": "Price: "
+            "price": "Price: ",
+            "loginRequire": "You need to login to book an appointment"
         }
     },
     "admin": {
