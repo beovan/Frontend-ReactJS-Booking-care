@@ -1,16 +1,13 @@
-import React, { Component } from "react";
-import { connect } from "react-redux";
-import { push } from "connected-react-router";
+import React, {Component} from "react";
+import {connect} from "react-redux";
+import {push} from "connected-react-router";
 
 // import * as actions from "../store/actions";
 import * as actions from "../../../store/actions";
 
 import "./Login.scss";
-import { FormattedMessage } from "react-intl";
-import { handleLoginApi } from "../../../services/userService";
-import { toast } from "react-toastify";
-import { getAuth, signInWithPopup, GoogleAuthProvider } from "firebase/auth";
-import { app, auth, provider } from "../../../config/firebase";
+import {handleLoginApi} from "../../../services/userService";
+import {toast} from "react-toastify";
 
 // import "./Login.scss";
 class Login extends Component {
@@ -65,47 +62,7 @@ class Login extends Component {
     }
   };
 
-  // signInWithGoogle = async () => {
-  //   this.setState({
-  //     errMessage: "",
-  //   });
-  //   signInWithPopup(auth, provider)
-  //     .then(async (result) => {
-  //       try {
-  //         console.log(result);
-  //         const credential = GoogleAuthProvider.credentialFromResult(result);
-  //         console.log(credential);
-  //         const token = credential.accessToken;
-  //         const user = result.user;
 
-  //         // Access the user's name
-  //         let data = await handleLoginApi({
-  //           uid: user.uid,
-  //           email: user.email,
-  //           // accessToken: credential.accessToken,
-  //         });
-  //         if (data && data.errCode !== 0) {
-  //           this.setState({
-  //             errMessage: data.errMessage,
-  //           });
-  //         }
-       
-  //         if (data && data.errCode === 0) {
-  //           toast.success("login with google success!");
-  //           this.props.userLoginSuccess(data.user);
-  //         }
-  //       } catch (error) {
-  //         console.error(error);
-  //       }
-  //     })
-  //     .catch((error) => {
-  //       const errorCode = error.code;
-  //       const errorMessage = error.message;
-  //       const email = error.email;
-  //       const credential = GoogleAuthProvider.credentialFromError(error);
-  //       console.log(errorCode, errorMessage, email, credential);
-  //     });
-  // };
 
   handleShowhidePassword = () => {
     this.setState({
