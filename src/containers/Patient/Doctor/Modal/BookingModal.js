@@ -8,11 +8,15 @@ import DatePicker from "../../../../components/Input/DatePicker";
 import * as actions from "../../../../store/actions";
 import { LANGUAGES } from "../../../../utils";
 import Select from "react-select";
-import { postPatientBookAppointment } from "../../../../services/userService";
+import {
+    postPatientBookAppointment,
+    getExtraInforDoctorById,
+} from "../../../../services/userService";
 import { toast } from "react-toastify";
 import { FormattedMessage } from "react-intl";
 import moment from "moment";
 import LoadingOverlay from "react-loading-overlay";
+
 class BookingModal extends Component {
   constructor(props) {
     super(props);
@@ -28,6 +32,8 @@ class BookingModal extends Component {
       genders: "",
       timeType: "",
       isShowLoading: false,
+        extraInfor: {},
+        paymentMethod: "cash", // default to 'cash'
     };
   }
 
@@ -49,7 +55,7 @@ class BookingModal extends Component {
     return result;
   };
 
-  componentDidUpdate(prevProps, prevState) {
+    async componentDidUpdate(prevProps, prevState) {
     if (this.props.language !== prevProps.language) {
       this.setState({
         genders: this.buildDataGender(this.props.genders),
@@ -153,6 +159,7 @@ class BookingModal extends Component {
       language: this.props.language,
       timeString: timeString,
       doctorName: doctorName,
+        paymentMethod: this.state.paymentMethod,
     });
 
     this.setState({
@@ -173,7 +180,7 @@ class BookingModal extends Component {
       doctorId = dataTime.doctorId;
     }
     let userInfor = this.props.userInfo;
-    console.log("userInfor", userInfor);
+
     console.log("state", this.state);
     return (
       <LoadingOverlay
@@ -280,7 +287,9 @@ class BookingModal extends Component {
                       className="form-control"
                     />
                   </div>
-                  <div className="col-6 form-group">
+
+
+                    <div className="col-6 form-group">
                     <label>
                       <FormattedMessage id="patient.booking-modal.gender" />
                     </label>
@@ -289,6 +298,20 @@ class BookingModal extends Component {
                       onChange={this.handleChangeSelect}
                       options={this.state.genders}
                     />
+                    </div>
+                    <div className="col-6 form-group">
+                        <Select
+
+                            value={this.state.paymentMethod}
+                            onChange={(event) =>
+                                this.setState({paymentMethod: event.target.value})
+                            }
+                        >
+                            <option value="PAY1">
+                                <FormattedMessage id="patient.booking-modal.Cash"/>
+                            </option>
+                            <option value="PAY2">VN Pay</option>
+                        </Select>
                   </div>
                 </div>
               </div>
@@ -310,17 +333,16 @@ class BookingModal extends Component {
           )}
 
           {isLoggedIn === false && (
-            
             <div className="booking-modal-content">
               <div className="booking-modal-header">
                 <span className="left">
-                <FormattedMessage id="patient.booking-modal.loginRequire" />
+                  <FormattedMessage id="patient.booking-modal.loginRequire"/>
                 </span>
                 <span className="right" onClick={closeBookingClose}>
                   <i className="fas fa-times"></i>
                 </span>
-                </div>
-                </div>
+              </div>
+            </div>
           )}
         </Modal>
       </LoadingOverlay>

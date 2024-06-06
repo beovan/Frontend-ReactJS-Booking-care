@@ -6,6 +6,7 @@ import './styles/styles.scss';
 import App from './containers/App';
 import * as serviceWorker from './serviceWorker';
 import IntlProviderWrapper from "./hoc/IntlProviderWrapper";
+// import "./scss/volt.scss";
 
 
 import { Provider } from 'react-redux';

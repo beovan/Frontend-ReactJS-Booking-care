@@ -94,7 +94,8 @@
             "btnCancel": "Cancel",
             "priceBooking": "Free booking",
             "price": "Price: ",
-            "loginRequire": "You need to login to book an appointment"
+          "loginRequire": "You need to login to book an appointment",
+          "Cash": "Cash"
         }
     },
     "admin": {

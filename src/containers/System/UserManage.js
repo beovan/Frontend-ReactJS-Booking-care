@@ -1,16 +1,32 @@
 import React, { Component } from "react";
 import { FormattedMessage } from "react-intl";
 import { connect } from "react-redux";
-import "./UserManage.scss";
+// import "./UserManage.scss";
+import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 import {
-  getAllUsers,
-  createNewUserService,
-  deleteUserService,
-  editUserService,
-} from "../../services/userService";
-import ModalUser from "./ModalUser";
-import { emitter } from "../../utils/emitter";
-import ModalEditUser from "./ModalEditUser";
+  faCashRegister,
+  faChartLine,
+  faCloudUploadAlt,
+  faPlus,
+  faRocket,
+  faTasks,
+  faUserShield
+} from '@fortawesome/free-solid-svg-icons';
+import {Col, Row, Button, Dropdown, ButtonGroup} from '@themesberg/react-bootstrap';
+
+import {
+  CounterWidget,
+  CircleChartWidget,
+  BarChartWidget,
+  TeamMembersWidget,
+  ProgressTrackWidget,
+  RankingWidget,
+  SalesValueWidget,
+  SalesValueWidgetPhone,
+  AcquisitionWidget
+} from "../../components/Widgets";
+import {PageVisitsTable} from "../../components/Tables";
+import {trafficShares, totalOrders} from "../../data/charts";
 class UserManage extends Component {
   constructor(props) {
     super(props);
@@ -23,12 +39,10 @@ class UserManage extends Component {
   }
 
   async componentDidMount() {
-    await this.getAllUsersFromReact();
+    // await this.getAllUsersFromReact();
   }
 
-  handleDeleteUser = (user) => {
-    console.log("click delete", user);
-  };
+
   /**Life cycle
    * Run component:
    * 1.Run construct -> init state
@@ -38,153 +52,129 @@ class UserManage extends Component {
    *
    */
 
-  getAllUsersFromReact = async () => {
-    let response = await getAllUsers("ALL");
-    if (response && response.errCode === 0) {
-      this.setState({
-        arrUsers: response.users,
-      });
-    }
-  };
-  handleAddUser = () => {
-    this.setState({
-      isOpenModalUser: true,
-    });
-  };
 
-  toggleUserModal = () => {
-    this.setState({
-      isOpenModalUser: !this.state.isOpenModalUser,
-    });
-  };
-  toggleUserEditModal = () => {
-    this.setState({
-      isOpenModalEditUser: !this.state.isOpenModalEditUser,
-    });
-  };
-
-  createNewUser = async (data) => {
-    try {
-      let response = await createNewUserService(data);
-      if (response && response.errCode !== 0) {
-        alert(response.errMessage);
-      } else {
-        await this.getAllUsersFromReact();
-        this.setState({
-          isOpenModalUser: false,
-        });
-
-        emitter.emit("EVENT_CLEAR_MODAL_DATA");
-      }
-    } catch (e) {
-      console.log(e);
-    }
-  };
-
-  handleDeleteUser = async (user) => {
-    try {
-      let res = await deleteUserService(user.id);
-      if (res && res.errCode === 0) {
-        await this.getAllUsersFromReact();
-      } else {
-        alert(res.errMessage);
-      }
-    } catch (e) {
-      console.log(e);
-    }
-  };
-
-  handleEditUser = (user) => {
-    console.log("check edit user", user);
-    this.setState({
-      isOpenModalEditUser: true,
-      userEdit: user,
-    });
-  };
-
-  doEditUser = async (user) => {
-    try{
-      let res = await editUserService(user);
-      if (res && res.errCode === 0) {
-        this.setState({
-          isOpenModalEditUser: false,
-        });
-        await this.getAllUsersFromReact();
-
-      }
-      else{
-        alert(res.errCode);
-      }
-    }catch(e){
-      console.log(e);
-    }
-  }
   render() {
-    let arrUsers = this.state.arrUsers;
-    console.log(arrUsers);
+
     //properties ; nested
     return (
-      <div className="users-containner">
-        <ModalUser
-          isOpenModalUser={this.state.isOpenModalUser}
-          toggleUserModal={this.toggleUserModal}
-          createNewUser={this.createNewUser}
-        />
-        {this.state.isOpenModalEditUser && (
-          <ModalEditUser
-            isOpen={this.state.isOpenModalEditUser}
-            toggleUserModal={this.toggleUserEditModal}
-            currentUser={this.state.userEdit}
-            editUser = {this.doEditUser}
-          />
-        )}
-        <div className="title text-center">Manage users with Beovan</div>
-        <div className="mx-1">
-          <button
-            className="btn btn-primary px-3"
-            onClick={() => this.handleAddUser()}
-          >
-            <i className="fas fa-plus"></i>Add new users
-          </button>
-        </div>
-        <div className="users-table mt-3 mx-1">
-          <table id="customers">
-            <tr>
-              <th>Email</th>
-              <th>First name</th>
-              <th>Last name</th>
-              <th>Add</th>
-              <th>Actions</th>
-            </tr>
+        <>
+          <div className="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center py-4">
+            <Dropdown className="btn-toolbar">
+              <Dropdown.Toggle as={Button} variant="primary" size="sm" className="me-2">
+                <FontAwesomeIcon icon={faPlus} className="me-2"/>New Task
+              </Dropdown.Toggle>
+              <Dropdown.Menu className="dashboard-dropdown dropdown-menu-left mt-2">
+                <Dropdown.Item className="fw-bold">
+                  <FontAwesomeIcon icon={faTasks} className="me-2"/> New Task
+                </Dropdown.Item>
+                <Dropdown.Item className="fw-bold">
+                  <FontAwesomeIcon icon={faCloudUploadAlt} className="me-2"/> Upload Files
+                </Dropdown.Item>
+                <Dropdown.Item className="fw-bold">
+                  <FontAwesomeIcon icon={faUserShield} className="me-2"/> Preview Security
+                </Dropdown.Item>
 
-            {arrUsers &&
-              arrUsers.map((item, index) => {
-                return (
-                  <tr>
-                    <td>{item.email}</td>
-                    <td>{item.firstName}</td>
-                    <td>{item.lastName}</td>
-                    <td>{item.address}</td>
-                    <td>
-                      <button
-                        onClick={() => this.handleEditUser(item)}
-                        className="btn-edit"
-                      >
-                        <i className="fas fa-pencil-alt"></i>
-                      </button>
-                      <button
-                        className="btn-delete"
-                        onClick={() => this.handleDeleteUser(item)}
-                      >
-                        <i className="fas fa-trash"></i>
-                      </button>
-                    </td>
-                  </tr>
-                );
-              })}
-          </table>
-        </div>
-      </div>
+                <Dropdown.Divider/>
+
+                <Dropdown.Item className="fw-bold">
+                  <FontAwesomeIcon icon={faRocket} className="text-danger me-2"/> Upgrade to Pro
+                </Dropdown.Item>
+              </Dropdown.Menu>
+            </Dropdown>
+
+            <ButtonGroup>
+              <Button variant="outline-primary" size="sm">Share</Button>
+              <Button variant="outline-primary" size="sm">Export</Button>
+            </ButtonGroup>
+          </div>
+
+          <Row className="justify-content-md-center">
+            <Col xs={12} className="mb-4 d-none d-sm-block">
+              <SalesValueWidget
+                  title="Sales Value"
+                  value="10,567"
+                  percentage={10.57}
+              />
+            </Col>
+            <Col xs={12} className="mb-4 d-sm-none">
+              <SalesValueWidgetPhone
+                  title="Sales Value"
+                  value="10,567"
+                  percentage={10.57}
+              />
+            </Col>
+            <Col xs={12} sm={6} xl={4} className="mb-4">
+              <CounterWidget
+                  category="Customers"
+                  title="345k"
+                  period="Feb 1 - Apr 1"
+                  percentage={18.2}
+                  icon={faChartLine}
+                  iconColor="shape-secondary"
+              />
+            </Col>
+
+            <Col xs={12} sm={6} xl={4} className="mb-4">
+              <CounterWidget
+                  category="Revenue"
+                  title="$43,594"
+                  period="Feb 1 - Apr 1"
+                  percentage={28.4}
+                  icon={faCashRegister}
+                  iconColor="shape-tertiary"
+              />
+            </Col>
+
+            <Col xs={12} sm={6} xl={4} className="mb-4">
+              <CircleChartWidget
+                  title="Traffic Share"
+                  data={trafficShares}/>
+            </Col>
+          </Row>
+
+          <Row>
+            <Col xs={12} xl={12} className="mb-4">
+              <Row>
+                {/*<Col xs={12} xl={8} className="mb-4">*/}
+                {/*  <Row>*/}
+                {/*    <Col xs={12} className="mb-4">*/}
+                {/*      <PageVisitsTable />*/}
+                {/*    </Col>*/}
+
+                {/*    <Col xs={12} lg={6} className="mb-4">*/}
+                {/*      <TeamMembersWidget />*/}
+                {/*    </Col>*/}
+
+                {/*    <Col xs={12} lg={6} className="mb-4">*/}
+                {/*      <ProgressTrackWidget />*/}
+                {/*    </Col>*/}
+                {/*  </Row>*/}
+                {/*</Col>*/}
+
+                <Col xs={12} xl={4}>
+                  <Row>
+                    <Col xs={12} className="mb-4">
+                      <BarChartWidget
+                          title="Total orders"
+                          value={452}
+                          percentage={18.2}
+                          data={totalOrders}/>
+                    </Col>
+
+                    <Col xs={12} className="px-0 mb-4">
+                      <RankingWidget/>
+                    </Col>
+
+                    <Col xs={12} className="px-0">
+                      <AcquisitionWidget/>
+                    </Col>
+                  </Row>
+                </Col>
+              </Row>
+            </Col>
+          </Row>
+        </>
+      
     );
   }
 }

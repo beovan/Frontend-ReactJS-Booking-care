@@ -223,7 +223,7 @@ class UserRedux extends Component {
 
     return (
       <div className="user-redux-container">
-        <div className="title">Add User beo van</div>
+          {/* <div className="title">Add User beo van</div> */}
         <div className="user-redux-body">
           <div className="container">
             <div className="row">
