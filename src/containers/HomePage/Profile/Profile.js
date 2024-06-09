@@ -23,6 +23,7 @@ import "./CardCoverPhoto.scss";
 import ProfileCover from "../../../assets/images/profile-cover.jpg";
 import { LANGUAGES, USER_ROLE } from "../../../utils";
 import _ from "lodash";
+import { getBookingByUserId } from "../../../services/userService";
 class Profile extends Component {
   constructor(props) {
     super(props);
@@ -30,6 +31,7 @@ class Profile extends Component {
       tabChange: "profile",
       birthday: "",
       userInfo: {},
+      bookings: {}
     };
   }
 
@@ -41,23 +43,26 @@ class Profile extends Component {
     this.setState({ birthday });
   };
 
-  componentDidMount() {
-    let { userInfo } = this.props;
-    this.setState({
-      userInfo: userInfo,
-    });
+  async componentDidMount() {
+    const { userInfo } = this.props;
+    if (userInfo && userInfo.id) {
+      console.log("userInfo", userInfo);
+      const res = await getBookingByUserId({ userId: userInfo.id });
+      this.setState({ userInfo, bookings: res });
+    }
     moment.locale("vi");
   }
-
-  componentDidUpdate(prevProps) {
-    if (this.props.userInfo !== prevProps.userInfo) {
-      this.setState({
-        userInfo: this.props.userInfo,
-      });
+  
+  async componentDidUpdate(prevProps) {
+    const { userInfo } = this.props;
+    if (userInfo !== prevProps.userInfo && userInfo && userInfo.id) {
+      const res = await getBookingByUserId({ userId: userInfo.id });
+      this.setState({ userInfo, bookings: res });
     }
   }
   render() {
-    let { userInfo } = this.state;
+    let { userInfo, bookings } = this.state;
+    console.log("bookings", bookings);
     return (
       <div className="detail-specialty-container">
         <HomeHeader />
@@ -175,7 +180,7 @@ class Profile extends Component {
                             </Col>
                           </Row>
                           <Row>
-                            <Col md={6} className="mb-3">
+                            {/* <Col md={6} className="mb-3">
                               <Form.Group id="emal">
                                 <Form.Label>Email</Form.Label>
                                 <Form.Control
@@ -183,7 +188,7 @@ class Profile extends Component {
                                   placeholder="Enter your email address"
                                 />
                               </Form.Group>
-                            </Col>
+                            </Col> */}
                             <Col md={6} className="mb-3">
                               <Form.Group id="phone">
                                 <Form.Label>Phone number</Form.Label>
@@ -218,7 +223,10 @@ class Profile extends Component {
                   </div>
                 )}
                 {this.state.tabChange === "bookings" && (
-                  <div className="doctor-extra-infor">FDSAFSD</div>
+                  <div className="doctor-extra-infor">
+                    
+                    dsa
+                  </div>
                 )}
               </div>
             </div>

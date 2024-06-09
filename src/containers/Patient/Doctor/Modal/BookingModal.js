@@ -9,8 +9,8 @@ import * as actions from "../../../../store/actions";
 import { LANGUAGES } from "../../../../utils";
 import Select from "react-select";
 import {
-    postPatientBookAppointment,
-    getExtraInforDoctorById,
+  postPatientBookAppointment,
+  getExtraInforDoctorById,
 } from "../../../../services/userService";
 import { toast } from "react-toastify";
 import { FormattedMessage } from "react-intl";
@@ -32,8 +32,9 @@ class BookingModal extends Component {
       genders: "",
       timeType: "",
       isShowLoading: false,
-        extraInfor: {},
-        paymentMethod: "cash", // default to 'cash'
+      extraInfor: {},
+      selectedPaymentOption: null,
+      paymentOptions: ["Cash", "PAYPAL"],
     };
   }
 
@@ -55,7 +56,7 @@ class BookingModal extends Component {
     return result;
   };
 
-    async componentDidUpdate(prevProps, prevState) {
+  async componentDidUpdate(prevProps, prevState) {
     if (this.props.language !== prevProps.language) {
       this.setState({
         genders: this.buildDataGender(this.props.genders),
@@ -78,7 +79,9 @@ class BookingModal extends Component {
       }
     }
   }
-
+  handleChangeSelectPaymentOption = (selectedOption) => {
+    this.setState({ selectedPaymentOption: selectedOption });
+  }
   handleOnChangeInput = (event, id) => {
     let valueInput = event.target.value;
     let stateCopy = { ...this.state };
@@ -145,6 +148,13 @@ class BookingModal extends Component {
     this.setState({
       isShowLoading: true,
     });
+    if (!this.state.selectedPaymentOption) {
+      toast.error("Please select payment method!");
+      this.setState({
+        isShowLoading: false,
+      });
+      return;
+    }
     let res = await postPatientBookAppointment({
       fullName: this.state.fullName,
       phoneNumber: this.state.phoneNumber,
@@ -159,7 +169,7 @@ class BookingModal extends Component {
       language: this.props.language,
       timeString: timeString,
       doctorName: doctorName,
-        paymentMethod: this.state.paymentMethod,
+      paymentMethod: this.state.paymentMethod,
     });
 
     this.setState({
@@ -288,8 +298,7 @@ class BookingModal extends Component {
                     />
                   </div>
 
-
-                    <div className="col-6 form-group">
+                  <div className="col-6 form-group">
                     <label>
                       <FormattedMessage id="patient.booking-modal.gender" />
                     </label>
@@ -298,20 +307,19 @@ class BookingModal extends Component {
                       onChange={this.handleChangeSelect}
                       options={this.state.genders}
                     />
-                    </div>
-                    <div className="col-6 form-group">
-                        <Select
-
-                            value={this.state.paymentMethod}
-                            onChange={(event) =>
-                                this.setState({paymentMethod: event.target.value})
-                            }
-                        >
-                            <option value="PAY1">
-                                <FormattedMessage id="patient.booking-modal.Cash"/>
-                            </option>
-                            <option value="PAY2">VN Pay</option>
-                        </Select>
+                  </div>
+                  <div className="col-6 form-group">
+                    <label>
+                      <FormattedMessage id="patient.booking-modal.payment" />
+                    </label>
+                    <Select
+                      value={this.state.selectedPaymentOption}
+                      onChange={this.handleChangeSelectPaymentOption}
+                      options={this.state.paymentOptions.map((option) => ({
+                        label: option,
+                        value: option,
+                      }))}
+                    />
                   </div>
                 </div>
               </div>
@@ -336,7 +344,7 @@ class BookingModal extends Component {
             <div className="booking-modal-content">
               <div className="booking-modal-header">
                 <span className="left">
-                  <FormattedMessage id="patient.booking-modal.loginRequire"/>
+                  <FormattedMessage id="patient.booking-modal.loginRequire" />
                 </span>
                 <span className="right" onClick={closeBookingClose}>
                   <i className="fas fa-times"></i>

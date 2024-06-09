@@ -104,6 +104,9 @@ const handleForgotPassword = (data) => {
 const handleResetPassword = (data) => {
   return axios.post("/api/reset-password", data);
 }
+const getBookingByUserId = (data) => {
+  return axios.get(`/api/get-booking-by-user-id?userId=${data.userId}`);
+}
 export {
   handleLoginApi,
   getAllUsers,
@@ -131,5 +134,6 @@ export {
   postSendRemedy,
   createNewPatient,
   handleForgotPassword,
-  handleResetPassword
+  handleResetPassword,
+  getBookingByUserId
 };

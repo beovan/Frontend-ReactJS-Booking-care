@@ -1,27 +1,35 @@
 import React, {Component} from "react";
 import {connect} from "react-redux";
 // import "./UserManage.scss";
+import { LANGUAGES ,USER_ROLE } from "../../utils";
+
 import {faCashRegister, faChartLine} from '@fortawesome/free-solid-svg-icons';
 import {Col, Row} from '@themesberg/react-bootstrap';
 
 import {BarChartWidget, CounterWidget, SalesValueWidget, SalesValueWidgetPhone} from "../../components/Widgets";
 import {totalOrders} from "../../data/charts";
+import * as actions from "../../store/actions";
 
 class UserManage extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      arrUsers: [],
-      isOpenModalUser: false,
-      isOpenModalEditUser: false,
-      userEdit: {},
+      usersRedux: [],
+
     };
   }
 
   async componentDidMount() {
-    // await this.getAllUsersFromReact();
+     this.props.fetchUserRedux();
   }
-
+  componentDidUpdate(prevProps, prevState) {
+    if (prevProps.listUsers !== this.props.listUsers) {
+      let updatedUsers = this.props.listUsers.filter(user => user.roleId === "R3");
+      this.setState({
+        usersRedux: updatedUsers,
+      });
+    }
+  }
 
   /**Life cycle
    * Run component:
@@ -34,7 +42,9 @@ class UserManage extends Component {
 
 
   render() {
-
+    let arrUsers = this.state.usersRedux;
+    console.log("State: ", arrUsers);
+    // console.log("Props: ", this.props);
     //properties ; nested
     return (
         <>
@@ -111,8 +121,8 @@ class UserManage extends Component {
                     <Col xs={12} className="mb-4">
                       <BarChartWidget
                           title="Total orders"
-                          value={452}
-                          percentage={18.2}
+                          value={2}
+                          percentage={4}
                           data={totalOrders}/>
                     </Col>
 
@@ -135,11 +145,17 @@ class UserManage extends Component {
 }
 
 const mapStateToProps = (state) => {
-  return {};
+  return {
+    listUsers: state.admin.users,
+
+  };
 };
 
 const mapDispatchToProps = (dispatch) => {
-  return {};
+  return {
+    fetchUserRedux: () => dispatch(actions.fetchAllUsersStart()),
+
+  };
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(UserManage);

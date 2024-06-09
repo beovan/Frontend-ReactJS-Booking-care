@@ -22,7 +22,7 @@
         "child5": "Mental health",
         "child6": "Dental examination"
     },
-    "menu": {                  
+    "menu": {
         "admin": {
             "manage-user": "Users System",
             "manage-doctor": "Manage doctors",
@@ -94,8 +94,8 @@
             "btnCancel": "Cancel",
             "priceBooking": "Free booking",
             "price": "Price: ",
-          "loginRequire": "You need to login to book an appointment",
-          "Cash": "Cash"
+            "loginRequire": "You need to login to book an appointment",
+            "payment": "Phương thức thanh toán"
         }
     },
     "admin": {

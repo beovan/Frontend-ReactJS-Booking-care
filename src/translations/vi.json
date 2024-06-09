@@ -94,8 +94,8 @@
             "btnCancel": "Hủy",
             "priceBooking": "Miễn phí đặt lịch",
             "price": "Giá khám: ",
-          "loginRequire": "Vui lòng đăng nhập để đặt lịch khám",
-          "Cash": "Tiền mặt"
+            "loginRequire": "Vui lòng đăng nhập để đặt lịch khám",
+            "payment": "Phương thức thanh toán"
         }
     },
     "admin": {
