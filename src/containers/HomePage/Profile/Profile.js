@@ -16,6 +16,9 @@ import {
   Form,
   Button,
   InputGroup,
+  Nav,
+  Pagination,
+  Table,
 } from "@themesberg/react-bootstrap";
 import "./datePicker.scss";
 import "./react-dateTime.css";
@@ -23,7 +26,12 @@ import "./CardCoverPhoto.scss";
 import ProfileCover from "../../../assets/images/profile-cover.jpg";
 import { LANGUAGES, USER_ROLE } from "../../../utils";
 import _ from "lodash";
-import { getBookingByUserId } from "../../../services/userService";
+import {
+  getBookingByUserId,
+  getProfileDoctorById,
+  getScheduleDoctorByDate,
+} from "../../../services/userService";
+import ProfileDoctor from "../../Patient/Doctor/ProfileDoctor";
 class Profile extends Component {
   constructor(props) {
     super(props);
@@ -31,7 +39,10 @@ class Profile extends Component {
       tabChange: "profile",
       birthday: "",
       userInfo: {},
-      bookings: {}
+      bookings: {},
+      doctorInfor: {},
+      timeType: "",
+      doctorId: "",
     };
   }
 
@@ -48,21 +59,53 @@ class Profile extends Component {
     if (userInfo && userInfo.id) {
       console.log("userInfo", userInfo);
       const res = await getBookingByUserId({ userId: userInfo.id });
-      this.setState({ userInfo, bookings: res });
+      const doctorId = await getProfileDoctorById(res.data.doctorId);
+      const timeTypePatient = await getScheduleDoctorByDate(
+        res.data.doctorId,
+        res.data.date
+      );
+      console.log("fdsfsds", timeTypePatient.data);
+
+      this.setState({
+        userInfo,
+        bookings: res.data,
+        doctorInfor: doctorId.data,
+        timeType: timeTypePatient.data,
+      });
     }
+    // if (userInfo && userInfo.id) {
+    //   this.setState({ doctorInfor: doctorId.data });
+    // }
     moment.locale("vi");
   }
-  
+
   async componentDidUpdate(prevProps) {
     const { userInfo } = this.props;
     if (userInfo !== prevProps.userInfo && userInfo && userInfo.id) {
       const res = await getBookingByUserId({ userId: userInfo.id });
-      this.setState({ userInfo, bookings: res });
+      const doctorId = await getProfileDoctorById(res.data.doctorId);
+      const timeTypePatient = await getScheduleDoctorByDate(
+        res.data.doctorId,
+        res.data.date
+      );
+      console.log("fdsfsds", timeTypePatient.data.timeTypeData);
+      this.setState({
+        userInfo,
+        bookings: res.data,
+        doctorInfor: doctorId.data,
+        timeType: timeTypePatient.data,
+      });
     }
   }
   render() {
-    let { userInfo, bookings } = this.state;
+    let { userInfo, bookings, doctorInfor, dataTime, timeType } = this.state;
+    let doctorId = "";
+    if (dataTime && !_.isEmpty(dataTime)) {
+      doctorId = dataTime.doctorId;
+    }
     console.log("bookings", bookings);
+    console.log("doctorInfor", doctorInfor);
+    console.log("timeTypeData", timeType);
     return (
       <div className="detail-specialty-container">
         <HomeHeader />
@@ -89,8 +132,6 @@ class Profile extends Component {
                           <Card.Title>{userInfo.firstName}</Card.Title>
                         </>
                       ) : null}
-
-                    
                     </Card.Body>
                   </Card>
                 </div>
@@ -108,9 +149,9 @@ class Profile extends Component {
                   <div className="doctor-schedule">
                     <Card border="light" className="bg-white shadow-sm mb-4">
                       <Card.Body>
-                        <h5 className="mb-4">General information</h5>
+                        {/* <h5 className="mb-4">General information</h5> */}
                         <Form>
-                          <Row>
+                          {/* <Row>
                             <Col md={6} className="mb-3">
                               <Form.Group id="firstName">
                                 <Form.Label>First Name</Form.Label>
@@ -135,8 +176,8 @@ class Profile extends Component {
                                 />
                               </Form.Group>
                             </Col>
-                          </Row>
-                          <Row className="align-items-center">
+                          </Row> */}
+                          {/* <Row className="align-items-center">
                             <Col md={6} className="mb-3">
                               <Form.Group id="birthday">
                                 <Form.Label>Birthday</Form.Label>
@@ -178,7 +219,7 @@ class Profile extends Component {
                                 </Form.Select>
                               </Form.Group>
                             </Col>
-                          </Row>
+                          </Row> */}
                           <Row>
                             {/* <Col md={6} className="mb-3">
                               <Form.Group id="emal">
@@ -189,7 +230,7 @@ class Profile extends Component {
                                 />
                               </Form.Group>
                             </Col> */}
-                            <Col md={6} className="mb-3">
+                            {/* <Col md={6} className="mb-3">
                               <Form.Group id="phone">
                                 <Form.Label>Phone number</Form.Label>
                                 <Form.Control
@@ -197,7 +238,7 @@ class Profile extends Component {
                                   placeholder="+12-345 678 910"
                                 />
                               </Form.Group>
-                            </Col>
+                            </Col> */}
                           </Row>
 
                           <h5 className="my-4">Address</h5>
@@ -224,8 +265,92 @@ class Profile extends Component {
                 )}
                 {this.state.tabChange === "bookings" && (
                   <div className="doctor-extra-infor">
-                    
-                    dsa
+                    <Card
+                      border="light"
+                      className="table-wrapper table-responsive shadow-sm"
+                    >
+                      <Card.Body className="pt-0">
+                        <Table hover className="user-table align-items-center">
+                          <thead>
+                            <tr>
+                              <th className="border-bottom">#</th>
+                              <th className="border-bottom">Ảnh đại diện</th>
+                              <th className="border-bottom">Bác sĩ</th>
+                              <th className="border-bottom">
+                                Khoảng thời gian đặt lịch
+                              </th>
+                              <th className="border-bottom">Trạng thái</th>
+                              <th className="border-bottom">Ngày đặt lịch</th>
+                              {/* <th className="border-bottom">Total</th> */}
+                              {/* <th className="border-bottom">Status</th> */}
+                              {/* <th className="border-bottom">Action</th> */}
+                            </tr>
+                          </thead>
+                          <tbody>
+                            {bookings && (
+                              <tr>
+                                <td>1</td>
+                                <td>
+                                  <img
+                                    src={doctorInfor.image}
+                                    alt="Ảnh đại diện"
+                                    style={{ width: "50px", height: "50px" }}
+                                  />
+                                </td>
+                                <td>
+                                  {bookings.doctorId
+                                    ? doctorInfor.lastName +
+                                      " " +
+                                      doctorInfor.firstName
+                                    : null}
+                                </td>
+                                <td>
+                                  {timeType.map((booking, index) => (
+                                    <td key={index}>
+                                      {booking.timeTypeData
+                                        ? booking.timeTypeData.valueVi // replace with valueVi for Vietnamese
+                                        : null}
+                                    </td>
+                                  ))}
+                                </td>
+                                <td>
+                                  {bookings.statusId === "S1" ? "Đợi xác minh": null}
+                                  {bookings.statusId === "S2" ? "Đã xác minh đợi khám": null}
+                                  {bookings.statusId === "S3" ? "Đã được khám": null}
+
+                                </td>
+                                <td>
+                                  {moment(Number(bookings.date)).format(
+                                    "DD/MM/YYYY"
+                                  )}
+                                </td>
+                                {/* <td>
+                                  <Button variant="primary" type="submit">
+                                    Detail
+                                  </Button>
+                                </td> */}
+                              </tr>
+                            )}
+                          </tbody>
+                        </Table>
+                        <Card.Footer className="px-3 border-0 d-lg-flex align-items-center justify-content-between">
+                          {/* <Nav>
+                            <Pagination className="mb-2 mb-lg-0">
+                              <Pagination.Prev>Previous</Pagination.Prev>
+                              <Pagination.Item active>1</Pagination.Item>
+                              <Pagination.Item>2</Pagination.Item>
+                              <Pagination.Item>3</Pagination.Item>
+                              <Pagination.Item>4</Pagination.Item>
+                              <Pagination.Item>5</Pagination.Item>
+                              <Pagination.Next>Next</Pagination.Next>
+                            </Pagination>
+                          </Nav> */}
+                          <small className="fw-bold">
+                            {/* Showing <b>{totalTransactions}</b> out of <b>25</b> entries */}
+                          </small>
+                        </Card.Footer>
+                      </Card.Body>
+                    </Card>
                   </div>
                 )}
               </div>
