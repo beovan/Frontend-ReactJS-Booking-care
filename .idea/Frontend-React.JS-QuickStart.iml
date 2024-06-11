@@ -10,5 +10,6 @@
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="module" module-name="nodejs-project" />
     <orderEntry type="module" module-name="volt-react-dashboard-v1.0.1" />
+    <orderEntry type="module" module-name="vnpay_nodejs" />
   </component>
 </module>

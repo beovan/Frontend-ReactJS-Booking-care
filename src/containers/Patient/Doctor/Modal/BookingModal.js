@@ -11,6 +11,7 @@ import Select from "react-select";
 import {
   postPatientBookAppointment,
   getExtraInforDoctorById,
+  vnpayCreatePaymentUrl
 } from "../../../../services/userService";
 import { toast } from "react-toastify";
 import { FormattedMessage } from "react-intl";
@@ -34,7 +35,7 @@ class BookingModal extends Component {
       isShowLoading: false,
       extraInfor: {},
       selectedPaymentOption: null,
-      paymentOptions: ["Cash", "PAYPAL"],
+      paymentOptions: ["Cash", "VNPAY"],
     };
   }
 
@@ -72,6 +73,7 @@ class BookingModal extends Component {
       if (this.props.dataTime && !_.isEmpty(this.props.dataTime)) {
         let doctorId = this.props.dataTime.doctorId;
         let timeType = this.props.dataTime.timeType;
+
         this.setState({
           doctorId: doctorId,
           timeType: timeType,
@@ -183,6 +185,73 @@ class BookingModal extends Component {
     }
   };
 
+  vnpay = async () => {
+    let date = new Date(this.state.birthday).getTime();
+    let timeString = this.buildTimeBooking(this.props.dataTime);
+    let doctorName = this.buildDoctorTime(this.props.dataTime);
+    if (!this.state.selectedPaymentOption) {
+      toast.error("Please select payment method!");
+      return;
+    }
+    else{
+        let res = await postPatientBookAppointment({
+            fullName: this.state.fullName,
+            phoneNumber: this.state.phoneNumber,
+            email: this.state.email,
+            address: this.state.address,
+            reason: this.state.reason,
+            date: this.props.dataTime.date,
+            birthday: date,
+            selectedGender: this.state.selectGender.value,
+            doctorId: this.state.doctorId,
+            timeType: this.state.timeType,
+            language: this.props.language,
+            timeString: timeString,
+            doctorName: doctorName,
+            paymentMethod: this.state.selectedPaymentOption.value,
+        });
+        if (res && res.errCode === 0) {
+            let data = {
+            amount: 1000,
+            language: 'vn',
+            bankCode: 'NCB'
+            }
+            let resVNPAY = await vnpayCreatePaymentUrl(data);
+            if (resVNPAY && resVNPAY.errCode === 0) {
+            window.open(resVNPAY.data, '_self');
+            }
+        }
+    }
+    this.setState({
+      isShowLoading: true,
+    });
+    let res = await postPatientBookAppointment({
+      fullName: this.state.fullName,
+      phoneNumber: this.state.phoneNumber,
+      email: this.state.email,
+      address: this.state.address,
+      reason: this.state.reason,
+      date: this.props.dataTime.date,
+      birthday: date,
+      selectedGender: this.state.selectGender.value,
+      doctorId: this.state.doctorId,
+      timeType: this.state.timeType,
+      language: this.props.language,
+      timeString: timeString,
+      doctorName: doctorName,
+      paymentMethod: this.state.paymentMethod,
+    });
+
+    this.setState({
+      isShowLoading: false,
+    });
+    if (res && res.errCode === 0) {
+      toast.success("Booking a new appointment succeed!");
+      this.props.closeBookingClose();
+    } else {
+      toast.error("Booking a new appointment error!");
+    }
+  }
   render() {
     let { isOpenModal, closeBookingClose, dataTime, isLoggedIn } = this.props;
     let doctorId = "";
@@ -195,7 +264,7 @@ class BookingModal extends Component {
     return (
       <LoadingOverlay
         active={this.state.isShowLoading}
-        spinner
+        spinner={true}
         text="Loading..."
       >
         <Modal
@@ -324,12 +393,24 @@ class BookingModal extends Component {
                 </div>
               </div>
               <div className="booking-modal-footer">
-                <button
-                  className="btn-booking-confirm"
-                  onClick={() => this.handleConfirmBooking()}
-                >
-                  <FormattedMessage id="patient.booking-modal.btnConfirm" />
-                </button>
+                {
+                  this.state.selectedPaymentOption && this.state.selectedPaymentOption.value === "VNPAY" ? (
+                      <button
+                          className="btn-booking-confirm"
+                          onClick={() => this.vnpay()}
+                      >
+                        Thanh toán qua VNPAY
+                      </button>
+                  ) : (
+                      <button
+                          className="btn-booking-confirm"
+                          onClick={() => this.handleConfirmBooking()}
+                      >
+                        <FormattedMessage id="patient.booking-modal.btnConfirm" />
+                      </button>
+                  )
+                }
+
                 <button
                   className="btn-booking-cancel"
                   onClick={closeBookingClose}
