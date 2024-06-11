@@ -300,6 +300,29 @@ export const fetchAllScheduleTime = () => {
   };
 };
 
+export const fetchAllPayment = () => {
+  return async (dispatch, getState) => {
+    try {
+      let res = await getAllCodeService("PRICE");
+      if (res && res.errCode === 0) { 
+        dispatch({
+          type: actionTypes.FETCH_ALL_PAYMENT_SUCCESS,
+          payment: res.data,
+        });
+      } else {
+        dispatch({
+          type: actionTypes.FETCH_ALL_PAYMENT_FAILDED
+        });
+      }
+    } catch (e) {
+      console.log("FETCH_ALL_PAYMENT_FAILDED: ", e);
+      dispatch({
+        type: actionTypes.SAVE_DETAIL_DOCTORS_FAILED
+      });
+    }
+  };
+};
+
 export const getRequiredDoctorInfor = () => {
   return async (dispatch, getState) => {
     try {

@@ -8,7 +8,6 @@ import DoctorExtrainfor from "../Doctor/DoctorExtrainfor";
 import ProfileDoctor from "../Doctor/ProfileDoctor";
 import {
   getAllDetailClinicById,
-  getAllCodeService,
 } from "../../../services/userService";
 import _ from "lodash";
 import { LANGUAGES } from "../../../utils";

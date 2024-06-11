@@ -10,6 +10,7 @@ const initialState = {
   allDoctors: [],
   allScheduleTime: [],
   allRequiredDoctorInfor: [],
+  payment: [],
 };
 
 const adminReducer = (state = initialState, action) => {
@@ -52,6 +53,16 @@ const adminReducer = (state = initialState, action) => {
       };
     case actionTypes.FETCH_ROLE_FAILDED:
       state.roles = [];
+      return {
+        ...state,
+      };
+    case actionTypes.FETCH_ALL_PAYMENT_SUCCESS:
+      state.payment = action.data;
+      return {
+        ...state,
+      };
+    case actionTypes.FETCH_ALL_PAYMENT_FAILDED:
+      state.payment = [];
       return {
         ...state,
       };

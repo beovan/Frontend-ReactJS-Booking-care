@@ -31,7 +31,6 @@ import {
   getProfileDoctorById,
   getScheduleDoctorByDate,
 } from "../../../services/userService";
-import ProfileDoctor from "../../Patient/Doctor/ProfileDoctor";
 class Profile extends Component {
   constructor(props) {
     super(props);

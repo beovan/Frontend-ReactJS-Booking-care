@@ -95,8 +95,8 @@ class DoctorSchedule extends Component {
           allAvailableItem: res.data ? res.data : [],
         });
       }
-      console.log("allAvailableItem:", res.data);
-      console.log("handleOnChangeSelect data:", res);
+      // console.log("allAvailableItem:", res.data);
+      // console.log("handleOnChangeSelect data:", res);
     }
   };
 
