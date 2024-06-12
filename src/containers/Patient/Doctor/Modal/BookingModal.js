@@ -13,6 +13,7 @@ import {
   getExtraInforDoctorById,
   vnpayCreatePaymentUrl,
   getAllCodeService,
+  vnpayReturn,
 } from "../../../../services/userService";
 import { toast } from "react-toastify";
 import { FormattedMessage } from "react-intl";
@@ -206,17 +207,28 @@ class BookingModal extends Component {
   };
 
   vnpay = async () => {
-    const { fullName, phoneNumber, email, address, reason, selectGender, doctorId, timeType, selectedPaymentOption, birthday } = this.state;
+    const {
+      fullName,
+      phoneNumber,
+      email,
+      address,
+      reason,
+      selectGender,
+      doctorId,
+      timeType,
+      selectedPaymentOption,
+      birthday,
+    } = this.state;
     const { dataTime, language, closeBookingClose } = this.props;
     const date = new Date(birthday).getTime();
     const timeString = this.buildTimeBooking(dataTime);
     const doctorName = this.buildDoctorTime(dataTime);
-  
+
     if (!selectedPaymentOption) {
       toast.error("Please select payment method!");
       return;
     }
-  
+
     const appointmentData = {
       fullName,
       phoneNumber,
@@ -233,11 +245,10 @@ class BookingModal extends Component {
       doctorName,
       // paymentMethod: selectedPaymentOption.value,
     };
-  
+
     this.setState({ isShowLoading: true });
-  
+
     let res = await postPatientBookAppointment(appointmentData);
-  
     if (res && res.errCode === 0) {
       let data = {
         amount: 200000,
@@ -246,11 +257,22 @@ class BookingModal extends Component {
       let resVNPAY = await vnpayCreatePaymentUrl(data);
       if (resVNPAY && resVNPAY.errCode === 0) {
         window.open(resVNPAY.data, "_self");
+      } else {
+        if (resVNPAY.code === '97') {
+          let resVNPAYReturn = await vnpayReturn();
+      if (resVNPAYReturn) {
+        alert("Payment success!");
       }
+          window.location.href = process.env.PORT;
+        } else {
+          alert("Failed to create payment URL: " + resVNPAY.message);
+        }
+      }
+      
     }
-  
+
     this.setState({ isShowLoading: false });
-  
+
     if (res && res.errCode === 0) {
       toast.success("Booking a new appointment succeed!");
       closeBookingClose();

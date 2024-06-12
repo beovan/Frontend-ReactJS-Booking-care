@@ -119,6 +119,9 @@ const getBookingByUserId = (data) => {
 const vnpayCreatePaymentUrl = (data) => {
     return axios.post("/api/create-payment-url", data);
 }
+const vnpayReturn = (data) => {
+    return axios.get("/api/vnpay-return", data);
+}
 export {
   handleLoginApi,
   getAllUsers,
@@ -148,5 +151,6 @@ export {
   handleForgotPassword,
   handleResetPassword,
   getBookingByUserId,
-  vnpayCreatePaymentUrl
+  vnpayCreatePaymentUrl,
+  vnpayReturn
 };
