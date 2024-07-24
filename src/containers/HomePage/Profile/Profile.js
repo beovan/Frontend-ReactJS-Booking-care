@@ -58,23 +58,22 @@ class Profile extends Component {
     if (userInfo && userInfo.id) {
       console.log("userInfo", userInfo);
       const res = await getBookingByUserId({ userId: userInfo.id });
-      const doctorId = await getProfileDoctorById(res.data.doctorId);
-      const timeTypePatient = await getScheduleDoctorByDate(
-        res.data.doctorId,
-        res.data.date
-      );
-      console.log("fdsfsds", timeTypePatient.data);
+      if (res.data) {
+        const doctorId = await getProfileDoctorById(res.data.doctorId);
+        const timeTypePatient = await getScheduleDoctorByDate(
+          res.data.doctorId,
+          res.data.date
+        );
+        console.log("fdsfsds", timeTypePatient.data);
 
-      this.setState({
-        userInfo,
-        bookings: res.data,
-        doctorInfor: doctorId.data,
-        timeType: timeTypePatient.data,
-      });
+        this.setState({
+          userInfo,
+          bookings: res.data,
+          doctorInfor: doctorId.data,
+          timeType: timeTypePatient.data,
+        });
+      }
     }
-    // if (userInfo && userInfo.id) {
-    //   this.setState({ doctorInfor: doctorId.data });
-    // }
     moment.locale("vi");
   }
 
@@ -82,18 +81,20 @@ class Profile extends Component {
     const { userInfo } = this.props;
     if (userInfo !== prevProps.userInfo && userInfo && userInfo.id) {
       const res = await getBookingByUserId({ userId: userInfo.id });
-      const doctorId = await getProfileDoctorById(res.data.doctorId);
-      const timeTypePatient = await getScheduleDoctorByDate(
-        res.data.doctorId,
-        res.data.date
-      );
-      console.log("fdsfsds", timeTypePatient.data.timeTypeData);
-      this.setState({
-        userInfo,
-        bookings: res.data,
-        doctorInfor: doctorId.data,
-        timeType: timeTypePatient.data,
-      });
+      if (res.data) {
+        const doctorId = await getProfileDoctorById(res.data.doctorId);
+        const timeTypePatient = await getScheduleDoctorByDate(
+          res.data.doctorId,
+          res.data.date
+        );
+        console.log("fdsfsds", timeTypePatient.data.timeTypeData);
+        this.setState({
+          userInfo,
+          bookings: res.data,
+          doctorInfor: doctorId.data,
+          timeType: timeTypePatient.data,
+        });
+      }
     }
   }
   render() {
@@ -286,12 +287,16 @@ class Profile extends Component {
                             </tr>
                           </thead>
                           <tbody>
-                            {bookings && (
+                            {bookings && doctorInfor && (
                               <tr>
                                 <td>1</td>
                                 <td>
                                   <img
-                                    src={doctorInfor.image}
+                                    src={
+                                      doctorInfor.image
+                                        ? doctorInfor.image
+                                        : "default_image_url"
+                                    }
                                     alt="Ảnh đại diện"
                                     style={{ width: "50px", height: "50px" }}
                                   />
@@ -304,30 +309,40 @@ class Profile extends Component {
                                     : null}
                                 </td>
                                 <td>
-                                  {timeType.map((booking, index) => (
-                                    <td key={index}>
-                                      {booking.timeTypeData
-                                        ? booking.timeTypeData.valueVi // replace with valueVi for Vietnamese
-                                        : null}
-                                    </td>
-                                  ))}
+                                  {Array.isArray(timeType)
+                                    ? timeType.map((booking, index) => (
+                                        <td key={index}>
+                                          {booking.timeTypeData
+                                            ? booking.timeTypeData.valueVi // replace with valueVi for Vietnamese
+                                            : null}
+                                        </td>
+                                      ))
+                                    : null}
                                 </td>
                                 <td>
-                                  {bookings.statusId === "S1" ? "Đợi xác minh": null}
-                                  {bookings.statusId === "S2" ? "Đã xác minh đợi khám": null}
-                                  {bookings.statusId === "S3" ? "Đã được khám": null}
-
+                                  {bookings.statusId === "S1"
+                                    ? "Đợi xác minh"
+                                    : null}
+                                  {bookings.statusId === "S2"
+                                    ? "Đã xác minh đợi khám"
+                                    : null}
+                                  {bookings.statusId === "S3"
+                                    ? "Đã được khám"
+                                    : null}
                                 </td>
                                 <td>
-                                  {moment(Number(bookings.date)).format(
-                                    "DD/MM/YYYY"
-                                  )}
+                                  {bookings.date &&
+                                  moment(Number(bookings.date)).isValid()
+                                    ? moment(Number(bookings.date)).format(
+                                        "DD/MM/YYYY"
+                                      )
+                                    : "Invalid date"}
                                 </td>
                                 {/* <td>
-                                  <Button variant="primary" type="submit">
-                                    Detail
-                                  </Button>
-                                </td> */}
+<Button variant="primary" type="submit">
+  Detail
+</Button>
+</td> */}
                               </tr>
                             )}
                           </tbody>
